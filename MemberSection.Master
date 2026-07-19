@@ -1,0 +1,40 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MemberSection.master.cs" Inherits="PitStop.MemberSection" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="utf-8" />
+    <title><asp:ContentPlaceHolder ID="TitleContent" runat="server">PitStop Dashboard</asp:ContentPlaceHolder></title>
+    <link href="~/Content/member.css" rel="stylesheet" runat="server" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <header class="member-header">
+            <div class="member-logo">
+                <span class="logo-icon-sm">🏁</span> PitStop
+            </div>
+
+            <nav class="member-nav">
+                <ul class="member-nav-list">
+                    <li id="navDashboard" runat="server" class="member-nav-item active">
+                        <a id="dashboardLink" runat="server">Dashboard</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="member-actions">
+                <span class="icon-btn">🔍</span>
+                <span class="icon-btn">🔔</span>
+                <div class="member-avatar">
+                    <asp:Label ID="lblUserInitials" runat="server" Text="U"></asp:Label>
+                </div>
+            </div>
+        </header>
+
+        <main class="member-main">
+            <asp:ContentPlaceHolder ID="MemberMainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </main>
+    </form>
+</body>
+</html>

@@ -1,0 +1,73 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="PitStop.Register" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+    Regsiter
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-subtitle">Join PitStop and start tracking progress</p>
+
+            <div class="form-group">
+                <label for="txtFullName">Full Name</label>
+                <asp:TextBox ID="txtFullName" runat="server" CssClass="form-input"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvFullName" runat="server"
+                    ControlToValidate="txtFullName"
+                    ErrorMessage="Name is required"
+                    CssClass="form-error"
+                    Display="Dynamic">
+                </asp:RequiredFieldValidator>
+            </div>
+
+            <div class="form-group">
+                <label for="txtEmail">Email</label>
+                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-input" TextMode="Email"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvEmail" runat="server"
+                    ControlToValidate="txtEmail"
+                    ErrorMessage="Email is required"
+                    CssClass="form-error"
+                    Display="Dynamic">
+                </asp:RequiredFieldValidator>
+            </div>
+
+            <div class="form-group">
+                <label for="txtPassword">Password</label>
+                <asp:TextBox ID="txtPassword" runat="server" CssClass="form-input" TextMode="Password"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvPassword" runat="server"
+                    ControlToValidate="txtPassword"
+                    ErrorMessage="Password is required"
+                    CssClass="form-error"
+                    Display="Dynamic">
+                </asp:RequiredFieldValidator>
+            </div>
+
+            <div class="form-group">
+                <label for="txtConfirmPassword">Confirm Password</label>
+                <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-input" TextMode="Password"></asp:TextBox>
+                <asp:CompareValidator ID="cvPassword" runat="server"
+                    ControlToValidate="txtConfirmPassword"
+                    ControlToCompare="txtPassword"
+                    ErrorMessage="Passwords do not match"
+                    CssClass="form-error"
+                    Display="Dynamic">
+                </asp:CompareValidator>
+            </div>
+
+            <div class="form-group">
+                <label for="ddlRole">I am a...</label>
+                <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-input">
+                    <asp:ListItem Text="Student" Value="Student"></asp:ListItem>
+                    <asp:ListItem Text="Advisor" Value="Admin"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+
+            <!-- TODO: [Teammate handling auth] - wire up Click event to insert new user into Users table (hash password!), then redirect to Login.aspx -->
+            <asp:Button ID="btnRegister" runat="server" Text="Create Account" CssClass="btn-primary" />
+
+            <asp:Label ID="lblRegisterError" runat="server" CssClass="form-error" Visible="false"></asp:Label>
+
+            <p class="auth-footer">Already have an account? <a href="~/Login.aspx" runat="server">Log in here</a></p>
+        </div>
+    </div>
+</asp:Content>
+
