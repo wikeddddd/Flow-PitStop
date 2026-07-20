@@ -72,7 +72,11 @@
     <Content Include="Content\site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="ManageUserProfile.aspx" />
+    <Content Include="PitWallTasks.aspx" />
     <Content Include="Register.aspx" />
+    <Content Include="StudentDashboard.aspx" />
+    <Content Include="StudentLeaderboard.aspx" />
     <Content Include="Student\Dashboard.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -98,12 +102,26 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ManageUserProfile.aspx.cs">
+      <DependentUpon>ManageUserProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageUserProfile.aspx.designer.cs">
+      <DependentUpon>ManageUserProfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MemberSection.Master.cs">
       <DependentUpon>MemberSection.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="MemberSection.Master.designer.cs">
       <DependentUpon>MemberSection.Master</DependentUpon>
+    </Compile>
+    <Compile Include="PitWallTasks.aspx.cs">
+      <DependentUpon>PitWallTasks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PitWallTasks.aspx.designer.cs">
+      <DependentUpon>PitWallTasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.aspx.cs">
@@ -119,6 +137,20 @@
     </Compile>
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="StudentDashboard.aspx.cs">
+      <DependentUpon>StudentDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentDashboard.aspx.designer.cs">
+      <DependentUpon>StudentDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StudentLeaderboard.aspx.cs">
+      <DependentUpon>StudentLeaderboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentLeaderboard.aspx.designer.cs">
+      <DependentUpon>StudentLeaderboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
