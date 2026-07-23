@@ -31,11 +31,13 @@
             </div>
 
             <!-- TODO: [Teammate handling auth] - wire up Click event to validate credentials, set Session["UserRole"], redirect to Student/Dashboard.aspx or Admin/Dashboard.aspx -->
-            <asp:Button ID="btnLogin" runat="server" Text="Log In" CssClass="btn-primary" />
+            <asp:Button ID="btnLogin" runat="server" Text="Log In" CssClass="btn-primary" OnClick="btnLogin_Click" />
 
             <asp:Label ID="lblLoginError" runat="server" CssClass="form-error" Visible="false"></asp:Label>
 
-            <p class="auth-footer">Don't have an account? <a href="~/Register.aspx" runat="server">Register here</a></p>
+            <p class="auth-footer">Don't have an account? 
+                <asp:LinkButton ID="lbCreateUser" runat="server" OnClick="lbCreateUser_Click">Register Here</asp:LinkButton>
+            </p>
         </div>
     </div>
 </asp:Content>

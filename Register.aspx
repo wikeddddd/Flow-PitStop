@@ -6,7 +6,7 @@
     <div class="auth-container">
         <div class="auth-card">
             <h1 class="auth-title">Create Account</h1>
-            <p class="auth-subtitle">Join PitStop and start tracking progress</p>
+            <p class="auth-subtitle" id="subCreateAccount">Join PitStop and start tracking progress</p>
 
             <div class="form-group">
                 <label for="txtFullName">Full Name</label>
@@ -55,18 +55,20 @@
 
             <div class="form-group">
                 <label for="ddlRole">I am a...</label>
-                <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-input">
+                <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-input" OnSelectedIndexChanged="ddlRole_SelectedIndexChanged">
                     <asp:ListItem Text="Student" Value="Student"></asp:ListItem>
                     <asp:ListItem Text="Advisor" Value="Admin"></asp:ListItem>
                 </asp:DropDownList>
             </div>
 
             <!-- TODO: [Teammate handling auth] - wire up Click event to insert new user into Users table (hash password!), then redirect to Login.aspx -->
-            <asp:Button ID="btnRegister" runat="server" Text="Create Account" CssClass="btn-primary" />
+            <asp:Button ID="btnRegister" runat="server" Text="Create Account" CssClass="btn-primary" OnClick="btnRegister_Click" />
 
             <asp:Label ID="lblRegisterError" runat="server" CssClass="form-error" Visible="false"></asp:Label>
 
-            <p class="auth-footer">Already have an account? <a href="~/Login.aspx" runat="server">Log in here</a></p>
+            <p class="auth-footer">Already have an account? <a href="~/Login.aspx" runat="server">
+                <asp:LinkButton ID="lbLogin" runat="server" OnClick="lbLogin_Click">Log In</asp:LinkButton>
+                </a></p>
         </div>
     </div>
 </asp:Content>
