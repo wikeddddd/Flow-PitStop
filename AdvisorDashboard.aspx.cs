@@ -14,12 +14,37 @@ namespace PitStop
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack) 
-            { 
+            if (!IsPostBack)
+            {
                 BindTasks();
-                
+
             }
-               
+
+        }
+        protected void btnApprove_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(hfSelectedTaskId.Value))
+            {
+                // Safety check if no row was selected
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please select a task from the table first!');", true);
+                return;
+            }
+
+            int taskId = int.Parse(hfSelectedTaskId.Value);
+            string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            string query = "UPDATE Tasks SET status = 'Approved' WHERE TaskId = @TaskId";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@TaskId", taskId);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+          
+            BindTasks();
         }
 
         protected void btnAddTask_Click(object sender, EventArgs e)
@@ -117,6 +142,8 @@ namespace PitStop
             BindTasks();
         }
 
+
+
         protected void gvTasks_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -167,7 +194,32 @@ namespace PitStop
             BindTasks();
         }
 
+        protected void gvTasks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GridViewRow row = gvTasks.SelectedRow;
+
+            // Store the TaskId in hidden field for reference during Approval
+            hfSelectedTaskId.Value = gvTasks.SelectedDataKey["TaskId"].ToString();
+
+            // Store Student ID if available in DataKey or fetch from query
+            if (gvTasks.SelectedDataKey["Id"] != null)
+            {
+                txtStudentId.Text = gvTasks.SelectedDataKey["Id"].ToString();
+            }
+
+            // Extract row cell text safely (HTML Decode handles special chars)
+            txtTitle.Text = HttpUtility.HtmlDecode(row.Cells[1].Text);
+            txtDescription.Text = HttpUtility.HtmlDecode(row.Cells[2].Text);
+            txtXPReward.Text = HttpUtility.HtmlDecode(row.Cells[3].Text);
+
+            // Format date for <asp:TextBox TextMode="Date"> (YYYY-MM-DD)
+            if (DateTime.TryParse(row.Cells[4].Text, out DateTime parsedDate))
+            {
+                txtDueDate.Text = parsedDate.ToString("yyyy-MM-dd");
+            }
+
+        }
     }
-
-
 }
+
+    

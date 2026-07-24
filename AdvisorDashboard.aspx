@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MemberSection.Master" CodeBehind="AdvisorDashboard.aspx.cs" Inherits="PitStop.AdvisorDashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MemberSection.Master" CodeBehind="AdvisorDashboard.aspx.cs" Inherits="PitStop.AdvisorDashboard" EnableEventValidation="false" %>
 
 <asp:Content ID="ContentTitle" ContentPlaceHolderID="TitleContent" runat="server">
     <title>Advisor Dashboard</title>
@@ -7,6 +7,7 @@
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
     <div>
         <h3>Add New Task</h3>
+        <asp:HiddenField ID="hfSelectedTaskId" runat="server" />
         <table>
             <tr>
                 <td>Student ID:</td>
@@ -61,6 +62,7 @@
             </tr>
         </table>
         <asp:Button ID="btnAddTask" runat="server" Text="Add Task" OnClick="btnAddTask_Click"/>
+        <asp:Button ID="btnApprove" runat="server" Text="Approve" OnClick="btnApprove_Click"/>
         <br /><br />
 
         <asp:GridView ID="gvTasks" runat="server" AutoGenerateColumns="false"
@@ -69,7 +71,8 @@
             OnRowCancelingEdit="gvTasks_RowCancelingEdit"
             OnRowUpdating="gvTasks_RowUpdating" 
             OnRowDeleting="gvTasks_RowDeleting"
-            OnRowDataBound="gvTasks_RowDataBound">
+            OnRowDataBound="gvTasks_RowDataBound"
+            OnSelectedIndexChanged="gvTasks_SelectedIndexChanged">
             <Columns>
                 <asp:BoundField DataField="TaskId" HeaderText="Task ID" ReadOnly="true" />
                 <asp:BoundField DataField="title" HeaderText="Title" />

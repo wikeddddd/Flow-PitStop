@@ -11,125 +11,116 @@ namespace PitStop
 {
 
 
-    public partial class AdvisorDashboard
+    public partial class PitWallTasks
     {
 
         /// <summary>
-        /// hfSelectedTaskId control.
+        /// LinkButton1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfSelectedTaskId;
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
 
         /// <summary>
-        /// txtStudentId control.
+        /// LinkButton2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStudentId;
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton2;
 
         /// <summary>
-        /// rfvStudentId control.
+        /// LinkButton3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvStudentId;
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton3;
 
         /// <summary>
-        /// txtTitle control.
+        /// Label2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTitle;
+        protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// rfvTitle control.
+        /// Label3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvTitle;
+        protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// txtDescription control.
+        /// ddlPendingTasks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDescription;
+        protected global::System.Web.UI.WebControls.DropDownList ddlPendingTasks;
 
         /// <summary>
-        /// txtXPReward control.
+        /// Label1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtXPReward;
+        protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// rfvXP control.
+        /// fileTaskUpload control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvXP;
+        protected global::System.Web.UI.WebControls.FileUpload fileTaskUpload;
 
         /// <summary>
-        /// rvXP control.
+        /// validateFileUpload control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvXP;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validateFileUpload;
 
         /// <summary>
-        /// txtDueDate control.
+        /// reValidateFileUpload control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDueDate;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator reValidateFileUpload;
 
         /// <summary>
-        /// rfvDueDate control.
+        /// btnSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDueDate;
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
 
         /// <summary>
-        /// btnAddTask control.
+        /// lblStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddTask;
-
-        /// <summary>
-        /// btnApprove control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnApprove;
+        protected global::System.Web.UI.WebControls.Label lblStatus;
 
         /// <summary>
         /// gvTasks control.
