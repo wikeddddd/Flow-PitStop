@@ -9,11 +9,11 @@
             <p class="auth-subtitle" id="subCreateAccount">Join PitStop and start tracking progress</p>
 
             <div class="form-group">
-                <label for="txtFullName">Full Name</label>
-                <asp:TextBox ID="txtFullName" runat="server" CssClass="form-input"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="rfvFullName" runat="server"
-                    ControlToValidate="txtFullName"
-                    ErrorMessage="Name is required"
+                <label for="txtUsername">Username</label>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-input"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvUsername" runat="server"
+                    ControlToValidate="txtUsername"
+                    ErrorMessage="Username is required"
                     CssClass="form-error"
                     Display="Dynamic">
                 </asp:RequiredFieldValidator>

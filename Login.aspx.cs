@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -14,7 +16,7 @@ namespace PitStop
 
         }
 
-        protected System.Void btnLogin_Click(System.Object sender, System.EventArgs e)
+        protected void btnLogin_Click(System.Object sender, System.EventArgs e)
         {
             try
             {
@@ -58,67 +60,93 @@ namespace PitStop
                     }
                 }
 
-                //SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
                 con.Open();
 
-                //SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM userTable WHERE email = '" + txtEmail.Text + "' and Password = '" + txtPassword.Text + "'", con);
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE email = '" + txtEmail.Text + "' and Password = '" + txtPassword.Text + "'", con);
 
                 int count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
 
                 if (count > 0)
                 {
-                    //SqlCommand cmdType = new SqlCommand("SELECT fname, email, usertype FROM userTable WHERE email = '" + txtEmail.Text + "'", con);
+                    SqlCommand cmdType = new SqlCommand("SELECT email, usertype FROM UserPitStop WHERE email = '" + txtEmail.Text + "'", con);
 
                     SqlDataReader dr = cmdType.ExecuteReader();
 
                     string type = "";
-                    string name = "";
                     string email = "";
-
+                    string username = "";
+                    string LoginID = "";
 
                     while (dr.Read())
                     {
                         type = dr["usertype"].ToString().Trim();
-                        name = dr["fname"].ToString().Trim();
                         email = dr["email"].ToString().Trim();
 
                     }
 
-                    Session["firstName"] = name;
+                    SqlCommand cmdData = new SqlCommand("SELECT * FROM @Table WHERE email = '" + txtEmail.Text + "'", con);
+                    switch (type)
+                    {
+                        case "admin":
+                            cmdData.Parameters.AddWithValue("@Table", "Admin");
+                            break;
+                        case "student":
+                            cmdData.Parameters.AddWithValue("@Table", "Students");
+                            break;
+                        case "advisor":
+                            cmdData.Parameters.AddWithValue("@Table", "Advisors");
+                            break;
+                        default:
+                            lblLoginError.Visible = true;
+                            lblLoginError.ForeColor = System.Drawing.Color.Red;
+                            lblLoginError.Text = "Invalid user type!";
+                            break;
+                    }
+                    SqlDataReader drData = cmdData.ExecuteReader();
+
+                    while (drData.Read())
+                    {
+                        username = drData["username"].ToString().Trim();
+                        LoginID = drData["id"].ToString().Trim();
+                    }
+
                     Session["email"] = email;
                     Session["role"] = type;
+                    Session["username"] = username;
+                    Session["LoggedInUserID"] = LoginID;
 
                     if (type == "admin")
                     {
-                        Response.Redirect("adminDashboard.aspx");
+                        Response.Redirect("AdminDashboard.aspx");
                     }
                     else if (type == "student")
                     {
-                        Response.Redirect("StudentDashboard.aspx"); // Kena cari directory
+                        Response.Redirect("StudentDashboard.aspx"); 
                     }
                     else if (type == "advisor")
                     {
-                        Response.Redirect("advisorDashboard.aspx"); // Kena cari directory
+                        Response.Redirect("AdvisorDashboard.aspx");
                     }
 
                 }
                 else
                 {
-                    errorMsg.Visible = true;
-                    errorMsg.ForeColor = System.Drawing.Color.Red;
-                    errorMsg.Text = "Username and password mismatch!";
+                    lblLoginError.Visible = true;
+                    lblLoginError.ForeColor = System.Drawing.Color.Red;
+                    lblLoginError.Text = "Username and password mismatch!";
                     return;
                 }
             }
             catch (Exception ex)
             {
-                errorMsg.Visible = true;
-                errorMsg.ForeColor = System.Drawing.Color.Red;
-                errorMsg.Text = "Error: " + ex.Message;
+                lblLoginError.Visible = true;
+                lblLoginError.ForeColor = System.Drawing.Color.Red;
+                lblLoginError.Text = "Error: " + ex.Message;
             }
         }
 
-        protected System.Void lbCreateUser_Click(System.Object sender, System.EventArgs e)
+        protected void lbCreateUser_Click(System.Object sender, System.EventArgs e)
         {
             Response.Redirect("Register.aspx");
         }

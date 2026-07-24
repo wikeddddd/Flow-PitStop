@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -14,56 +16,56 @@ namespace PitStop
 
         }
 
-        protected System.Void ddlRole_SelectedIndexChanged()
+        protected void ddlRole_SelectedIndexChanged()
         {
 
         }
 
-        protected System.Void btnRegister_Click()
+        protected void btnRegister_Click()
         {
             try
             {
-                if (txtFullName.Text == string.Empty)
+                if (txtUsername.Text == string.Empty)
                 {
-                    FullNameRequiredFieldValidator.Visible = true;
-                    FullNameRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                    FullNameRequiredFieldValidator.Text = "Full name is required!";
+                    rfvUsername.Visible = true;
+                    rfvUsername.ForeColor = System.Drawing.Color.Red;
+                    rfvUsername.Text = "Username is required!";
                     return;
                 }
 
                 if (txtEmail.Text == string.Empty)
                 {
-                    EmailRequiredFieldValidator.Visible = true;
-                    EmailRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                    EmailRequiredFieldValidator.Text = "Email is required!";
+                    rfvEmail.Visible = true;
+                    rfvEmail.ForeColor = System.Drawing.Color.Red;
+                    rfvEmail.Text = "Email is required!";
                     return;
                 }
 
                 if (txtPassword.Text == string.Empty)
                 {
-                    PasswordRequiredFieldValidator.Visible = true;
-                    PasswordRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                    PasswordRequiredFieldValidator.Text = "Password is required!";
+                    rfvPassword.Visible = true;
+                    rfvPassword.ForeColor = System.Drawing.Color.Red;
+                    rfvPassword.Text = "Password is required!";
                     return;
                 }
 
                 if (txtConfirmPassword.Text == string.Empty) {
 
-                    ConfirmPasswordRequiredFieldValidator.Visible = true;
-                    ConfirmPasswordRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                    ConfirmPasswordRequiredFieldValidator.Text = "Confirm password is required!";
+                    cvPassword.Visible = true;
+                    cvPassword.ForeColor = System.Drawing.Color.Red;
+                    cvPassword.Text = "Confirm password is required!";
                     return;
                 }
 
 
                 String invalidSymbols = "#%^&*()_+=[]{};:'\"\\|,<>";
-                foreach (char c in txtFullName.Text)
+                foreach (char c in txtUsername.Text)
                 {
                     if (invalidSymbols.Contains(c.ToString()))
                     {
-                        FullNameRequiredFieldValidator.Visible = true;
-                        FullNameRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                        FullNameRequiredFieldValidator.Text = "Full name cannot contain prohibited symbols!";
+                        rfvUsername.Visible = true;
+                        rfvUsername.ForeColor = System.Drawing.Color.Red;
+                        rfvUsername.Text = "Username cannot contain prohibited symbols!";
                         return;
                     }
                 }
@@ -71,9 +73,9 @@ namespace PitStop
                 {
                     if (invalidSymbols.Contains(c.ToString()))
                     {
-                        PasswordRequiredFieldValidator.Visible = true;
-                        PasswordRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                        PasswordRequiredFieldValidator.Text = "Password cannot contain prohibited symbols!";
+                        rfvPassword.Visible = true;
+                        rfvPassword.ForeColor = System.Drawing.Color.Red;
+                        rfvPassword.Text = "Password cannot contain prohibited symbols!";
                         return;
                     }
                 }
@@ -81,9 +83,9 @@ namespace PitStop
                 {
                     if (invalidSymbols.Contains(c.ToString()))
                     {
-                        EmailRequiredFieldValidator.Visible = true;
-                        EmailRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                        EmailRequiredFieldValidator.Text = "Email cannot contain prohibited symbols!";
+                        rfvEmail.Visible = true;
+                        rfvEmail.ForeColor = System.Drawing.Color.Red;
+                        rfvEmail.Text = "Email cannot contain prohibited symbols!";
                         return;
                     }
                 }
@@ -91,52 +93,77 @@ namespace PitStop
                 {
                     if (invalidSymbols.Contains(c.ToString()))
                     {
-                        ConfirmPasswordRequiredFieldValidator.Visible = true;
-                        ConfirmPasswordRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                        ConfirmPasswordRequiredFieldValidator.Text = "Confirm password cannot contain prohibited symbols!";
+                        cvPassword.Visible = true;
+                        cvPassword.ForeColor = System.Drawing.Color.Red;
+                        cvPassword.Text = "Confirm password cannot contain prohibited symbols!";
                         return;
                     }
                 }
 
                 if (txtPassword.Text != txtConfirmPassword.Text)
                 {
-                    ConfirmPasswordRequiredFieldValidator.Visible = true;
-                    ConfirmPasswordRequiredFieldValidator.ForeColor = System.Drawing.Color.Red;
-                    ConfirmPasswordRequiredFieldValidator.Text = "Passwords do not match!";
+                    cvPassword.Visible = true;
+                    cvPassword.ForeColor = System.Drawing.Color.Red;
+                    cvPassword.Text = "Passwords do not match!";
                     return;
                 }
 
-                //SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
                 con.Open();
 
-                //SqlCommand checkCMD = new SqlCommand("SELECT COUNT(*) FROM userTable WHERE email ='" + txtEmail.Text + "' ", con);
-                int userExists = (int)checkCMD.ExecuteScalar();
+                SqlCommand checkCMD1= new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE email ='" + txtEmail.Text + "' ", con);
+                int usernameUsed = (int)checkCMD1.ExecuteScalar();
 
-                if (userExists > 0)
+                SqlCommand checkCMD2 = new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE username ='" + txtUsername.Text + "' ", con);
+                int emailUsed = (int)checkCMD2.ExecuteScalar();
+
+                if (usernameUsed > 0)
                 {
-                    errorMsg.Text = "Account already exists. Please choose a different email.";
+                    lblRegisterError.Text = "Username already exists. Please choose a different username.";
+                    return;
+                }
+                else if (emailUsed > 0)
+                {
+                    lblRegisterError.Text = "Email already exists. Please choose a different email.";
                     return;
                 }
                 else
                 {
-                   // SqlCommand cmd = new SqlCommand("INSERT INTO userTable (username, Password ,firstName,lastName,email,phoneNumber,userType) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtFirstName.Text + "', '" + txtLastName.Text + "', '" + txtEmail.Text + "', '" + txtPhoneNumber.Text + "', '" + lbUserRole.SelectedValue + "')", con);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    errorMsg.ForeColor = System.Drawing.Color.Green;
-                    errorMsg.Text = "User created successfully!";
+                    SqlCommand cmdUser = new SqlCommand("INSERT INTO UserPitStop (username, password ,email,role) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "', '" + ddlRole.SelectedValue + "')", con);
+                    cmdUser.ExecuteNonQuery();
+                    string role = ddlRole.SelectedValue.ToString();
+                    switch (role)
+                    {
+                        case "Admin":
+                           SqlCommand cmdRole = new SqlCommand("INSERT INTO Admin (username,password,email) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "')", con);
+                           cmdRole.ExecuteNonQuery();
+                           break;
+                        case "Advisor":
+                            SqlCommand cmdRole2 = new SqlCommand("INSERT INTO Advisor (username,password,email) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "')", con);
+                            cmdRole2.ExecuteNonQuery();
+                            break;
+                        case "Student":
+                            SqlCommand cmdRole3 = new SqlCommand("INSERT INTO Students (username,password,email) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "')", con);
+                            cmdRole3.ExecuteNonQuery();
+                            break;
+                        default:
+                            lblRegisterError.Text = "Invalid role selected.";
+                            return;
+                    }
+                    
                 }
                 con.Close();
 
             }
             catch (Exception ex)
             {
-                errorMsg.ForeColor = System.Drawing.Color.Red;
-                errorMsg.Text = "An error occurred: " + ex.Message;
+                lblRegisterError.ForeColor = System.Drawing.Color.Red;
+                lblRegisterError.Text = "An error occurred: " + ex.Message;
 
             }
         }
 
-        protected System.Void lbLogin_Click(System.Object sender, System.EventArgs e)
+        protected void lbLogin_Click(object sender, EventArgs e)
         {
             Response.Redirect("Login.aspx");
         }
