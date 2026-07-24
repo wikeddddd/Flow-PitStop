@@ -13,8 +13,6 @@
             <h2>Edit User</h2>
             <asp:Image ID="imgAvatar" runat="server" />
             <asp:LinkButton ID="lbDashboard" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
-            <asp:LinkButton ID="lbPitWallTasks" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
-            <asp:LinkButton ID="lbLeaderboard" runat="server" PostBackUrl="~/StudentLeaderboard.aspx">Leaderboard</asp:LinkButton>
             <asp:ValidationSummary ID="vsProfile" runat="server" ValidationGroup="Profile" HeaderText="Please correct these errors" />
         </div>
         <div class="form-group">
@@ -28,12 +26,13 @@
         <div class="form-group">
             <asp:Label ID="Label1" runat="server" Text="Choose a User :"></asp:Label>
 
-             <asp:ListBox ID="ddUser" runat="server"></asp:ListBox>
+             <asp:DropDownList ID="ddUser" runat="server" OnSelectedIndexChanged="ddUser_SelectedIndexChanged1">
+            </asp:DropDownList>
         </div>
          <div class="form-group">
             <label>Username:<asp:TextBox ID="TBUsername" runat="server"></asp:TextBox>
              </label>
-             &nbsp;<asp:RequiredFieldValidator ID="validateUsername" runat="server" ErrorMessage="Username is required" ControlToValidate="lbUser" ValidationGroup="Profile"></asp:RequiredFieldValidator>
+             &nbsp;<asp:RequiredFieldValidator ID="validateUsername" runat="server" ErrorMessage="Username is required" ControlToValidate="TBUsername" ValidationGroup="Profile"></asp:RequiredFieldValidator>
         </div>
          <div class="form-group">
              <label>Password:</label>
@@ -65,17 +64,22 @@
         </div>
         <div class="form-group"> 
             <asp:Label ID="Label2" runat="server" Text="Role"></asp:Label>
-            <asp:ListBox ID="ddRole" runat="server">
+            <asp:DropDownList ID="ddRole" runat="server">
                 <asp:ListItem>admin</asp:ListItem>
-                <asp:ListItem Value="advisor"></asp:ListItem>
-                <asp:ListItem>student</asp:ListItem>
-            </asp:ListBox>
+                <asp:ListItem>advisor</asp:ListItem>
+                <asp:ListItem Value="student"></asp:ListItem>
+            </asp:DropDownList>
         </div>
-        <asp:Label ID="lblStatus" runat="server" Text="Label"></asp:Label>
-        <asp:Button ID="btnSaveProfile" runat="server" OnClick="btnSaveProfile_Click" Text="Save" ValidationGroup="Profile" />
+        <div>
+            <asp:Label ID="lblStatus" runat="server" Text="Label"></asp:Label>
+        
+        </div>
+        <div class="form-group">
+            <asp:Button ID="btnSaveProfile" runat="server" OnClick="btnSaveProfile_Click" Text="Save" ValidationGroup="Profile" />
 
 
-        <asp:Button ID="btnDelete" runat="server" OnClick="btnDelete_Click" Text="Delete" />
+            <asp:Button ID="btnDelete" runat="server" OnClick="btnDelete_Click" Text="Delete" />
+        </div>
 
 
 </asp:Content>

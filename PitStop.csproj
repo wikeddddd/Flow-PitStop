@@ -83,6 +83,7 @@
     <Content Include="Register.aspx" />
     <Content Include="AdminDashboard.aspx" />
     <Content Include="StudentDashboard.aspx" />
+    <Content Include="EditLeaderboard.aspx" />
     <Content Include="StudentLeaderboard.aspx" />
     <Content Include="Student\Dashboard.aspx" />
     <Content Include="Web.config" />
@@ -172,6 +173,13 @@
     </Compile>
     <Compile Include="StudentDashboard.aspx.designer.cs">
       <DependentUpon>StudentDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EditLeaderboard.aspx.cs">
+      <DependentUpon>EditLeaderboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditLeaderboard.aspx.designer.cs">
+      <DependentUpon>EditLeaderboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="StudentLeaderboard.aspx.cs">
       <DependentUpon>StudentLeaderboard.aspx</DependentUpon>

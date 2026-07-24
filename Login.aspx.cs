@@ -16,11 +16,17 @@ namespace PitStop
 
         }
 
-        protected void btnLogin_Click(System.Object sender, System.EventArgs e)
+        protected void btnLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                if (txtEmail.Text == string.Empty)
+                // Hide previous errors
+                lblLoginError.Visible = false;
+                rfvEmail.Visible = false;
+                rfvPassword.Visible = false;
+
+                // Validate Email
+                if (string.IsNullOrWhiteSpace(txtEmail.Text))
                 {
                     rfvEmail.Visible = true;
                     rfvEmail.ForeColor = System.Drawing.Color.Red;
@@ -28,7 +34,8 @@ namespace PitStop
                     return;
                 }
 
-                if (txtPassword.Text == string.Empty)
+                // Validate Password
+                if (string.IsNullOrWhiteSpace(txtPassword.Text))
                 {
                     rfvPassword.Visible = true;
                     rfvPassword.ForeColor = System.Drawing.Color.Red;
@@ -36,113 +43,141 @@ namespace PitStop
                     return;
                 }
 
-                String invalidSymbols = "#%^&*()_+=-[]{};:'\"\\|,.<>";
+                // Optional symbol validation
+                string invalidSymbols = "#%^&*()+=[]{};:'\"\\|,<>";
 
                 foreach (char c in txtEmail.Text)
                 {
-                    if (invalidSymbols.Contains(c.ToString()))
+                    if (invalidSymbols.Contains(c))
                     {
                         rfvEmail.Visible = true;
                         rfvEmail.ForeColor = System.Drawing.Color.Red;
-                        rfvEmail.Text = "Email cannot contain prohibited symbols!";
+                        rfvEmail.Text = "Email contains invalid symbols!";
                         return;
                     }
                 }
 
-                foreach (char c in txtPassword.Text)
+                using (SqlConnection con = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                 {
-                    if (invalidSymbols.Contains(c.ToString()))
-                    {
-                        rfvPassword.Visible = true;
-                        rfvPassword.ForeColor = System.Drawing.Color.Red;
-                        rfvPassword.Text = "Password cannot contain prohibited symbols!";
-                        return;
-                    }
-                }
+                    con.Open();
 
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-                con.Open();
+                    //---------------------------------------------------------
+                    // Check Login
+                    //---------------------------------------------------------
+                    SqlCommand loginCmd = new SqlCommand(
+                        @"SELECT email, role
+                  FROM UserPitStop
+                  WHERE email=@Email AND password=@Password", con);
 
-                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE email = '" + txtEmail.Text + "' and Password = '" + txtPassword.Text + "'", con);
+                    loginCmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+                    loginCmd.Parameters.AddWithValue("@Password", txtPassword.Text);
 
-                int count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-
-                if (count > 0)
-                {
-                    SqlCommand cmdType = new SqlCommand("SELECT email, usertype FROM UserPitStop WHERE email = '" + txtEmail.Text + "'", con);
-
-                    SqlDataReader dr = cmdType.ExecuteReader();
-
-                    string type = "";
                     string email = "";
-                    string username = "";
-                    string LoginID = "";
+                    string type = "";
 
-                    while (dr.Read())
+                    using (SqlDataReader dr = loginCmd.ExecuteReader())
                     {
-                        type = dr["usertype"].ToString().Trim();
-                        email = dr["email"].ToString().Trim();
+                        if (!dr.Read())
+                        {
+                            lblLoginError.Visible = true;
+                            lblLoginError.ForeColor = System.Drawing.Color.Red;
+                            lblLoginError.Text = "Email or Password is incorrect!";
+                            return;
+                        }
 
+                        email = dr["email"].ToString();
+                        type = dr["role"].ToString().Trim().ToLower();
                     }
 
-                    SqlCommand cmdData = new SqlCommand("SELECT * FROM @Table WHERE email = '" + txtEmail.Text + "'", con);
+                    //---------------------------------------------------------
+                    // Determine table
+                    //---------------------------------------------------------
+                    string tableName = "";
+
                     switch (type)
                     {
                         case "admin":
-                            cmdData.Parameters.AddWithValue("@Table", "Admin");
+                            tableName = "Admin";
                             break;
+
                         case "student":
-                            cmdData.Parameters.AddWithValue("@Table", "Students");
+                            tableName = "Students";
                             break;
+
                         case "advisor":
-                            cmdData.Parameters.AddWithValue("@Table", "Advisors");
+                            tableName = "Advisors";
                             break;
+
                         default:
                             lblLoginError.Visible = true;
                             lblLoginError.ForeColor = System.Drawing.Color.Red;
                             lblLoginError.Text = "Invalid user type!";
-                            break;
+                            return;
                     }
-                    SqlDataReader drData = cmdData.ExecuteReader();
 
-                    while (drData.Read())
+                    //---------------------------------------------------------
+                    // Get User Details
+                    //---------------------------------------------------------
+                    SqlCommand userCmd = new SqlCommand(
+                        $"SELECT Id, username FROM {tableName} WHERE email=@Email", con);
+
+                    userCmd.Parameters.AddWithValue("@Email", email);
+
+                    string username = "";
+                    string loginID = "";
+
+                    using (SqlDataReader drUser = userCmd.ExecuteReader())
                     {
-                        username = drData["username"].ToString().Trim();
-                        LoginID = drData["id"].ToString().Trim();
+                        if (drUser.Read())
+                        {
+                            username = drUser["username"].ToString();
+                            loginID = drUser["Id"].ToString();
+                        }
+                        else
+                        {
+                            lblLoginError.Visible = true;
+                            lblLoginError.ForeColor = System.Drawing.Color.Red;
+                            lblLoginError.Text = "User information not found.";
+                            return;
+                        }
                     }
 
+                    //---------------------------------------------------------
+                    // Save Session
+                    //---------------------------------------------------------
                     Session["email"] = email;
                     Session["role"] = type;
                     Session["username"] = username;
-                    Session["LoggedInUserID"] = LoginID;
+                    Session["LoggedInUserID"] = loginID;
 
-                    if (type == "admin")
+                    //---------------------------------------------------------
+                    // Redirect
+                    //---------------------------------------------------------
+                    switch (type)
                     {
-                        Response.Redirect("AdminDashboard.aspx");
-                    }
-                    else if (type == "student")
-                    {
-                        Response.Redirect("StudentDashboard.aspx"); 
-                    }
-                    else if (type == "advisor")
-                    {
-                        Response.Redirect("AdvisorDashboard.aspx");
-                    }
+                        case "admin":
+                            Response.Redirect("AdminDashboard.aspx", false);
+                            Context.ApplicationInstance.CompleteRequest();
+                            break;
 
-                }
-                else
-                {
-                    lblLoginError.Visible = true;
-                    lblLoginError.ForeColor = System.Drawing.Color.Red;
-                    lblLoginError.Text = "Username and password mismatch!";
-                    return;
+                        case "student":
+                            Response.Redirect("StudentDashboard.aspx", false);
+                            Context.ApplicationInstance.CompleteRequest();
+                            break;
+
+                        case "advisor":
+                            Response.Redirect("AdvisorDashboard.aspx", false);
+                            Context.ApplicationInstance.CompleteRequest();
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 lblLoginError.Visible = true;
                 lblLoginError.ForeColor = System.Drawing.Color.Red;
-                lblLoginError.Text = "Error: " + ex.Message;
+                lblLoginError.Text = ex.Message;
             }
         }
 

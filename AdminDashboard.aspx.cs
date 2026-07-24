@@ -14,10 +14,7 @@ namespace PitStop
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["LoggedInUserId"] == null)
-            {
-                Session["LoggedInUserId"] = 1;
-            }
+
             if (!IsPostBack) {
                 InitializeDashboardSession();
             }
@@ -33,7 +30,7 @@ namespace PitStop
 
         protected void lbRacerLeaderboard_Click(object sender, EventArgs e)
         {
-            
+            Response.Redirect("EditLeaderboard.aspx");
         }
 
         protected void lbUserProfile_Click(object sender, EventArgs e)
@@ -48,7 +45,7 @@ namespace PitStop
 
         protected void lbEditPitWall_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("AdvisorDashboard.aspx");
         }
     }
 }

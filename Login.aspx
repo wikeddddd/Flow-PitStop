@@ -36,7 +36,7 @@
             <asp:Label ID="lblLoginError" runat="server" CssClass="form-error" Visible="false"></asp:Label>
 
             <p class="auth-footer">Don't have an account? 
-                <asp:LinkButton ID="lbCreateUser" runat="server" OnClick="lbCreateUser_Click">Register Here</asp:LinkButton>
+                <asp:LinkButton ID="lbCreateUser" runat="server" OnClick="lbCreateUser_Click" CausesValidation="False">Register Here</asp:LinkButton>
             </p>
         </div>
     </div>

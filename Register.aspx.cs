@@ -21,11 +21,36 @@ namespace PitStop
 
         }
 
-        protected void btnRegister_Click()
+        
+
+        protected void lbLogin_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Login.aspx");
+        }
+
+        protected void ddlRole_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnRegister_Click(object sender, EventArgs e)
         {
             try
             {
-                if (txtUsername.Text == string.Empty)
+                // Hide previous messages
+                lblRegisterError.Text = "";
+                lblRegisterError.Visible = false;
+
+                rfvUsername.Visible = false;
+                rfvEmail.Visible = false;
+                rfvPassword.Visible = false;
+                cvPassword.Visible = false;
+
+                // =============================
+                // Validation
+                // =============================
+
+                if (string.IsNullOrWhiteSpace(txtUsername.Text))
                 {
                     rfvUsername.Visible = true;
                     rfvUsername.ForeColor = System.Drawing.Color.Red;
@@ -33,7 +58,7 @@ namespace PitStop
                     return;
                 }
 
-                if (txtEmail.Text == string.Empty)
+                if (string.IsNullOrWhiteSpace(txtEmail.Text))
                 {
                     rfvEmail.Visible = true;
                     rfvEmail.ForeColor = System.Drawing.Color.Red;
@@ -41,7 +66,7 @@ namespace PitStop
                     return;
                 }
 
-                if (txtPassword.Text == string.Empty)
+                if (string.IsNullOrWhiteSpace(txtPassword.Text))
                 {
                     rfvPassword.Visible = true;
                     rfvPassword.ForeColor = System.Drawing.Color.Red;
@@ -49,55 +74,12 @@ namespace PitStop
                     return;
                 }
 
-                if (txtConfirmPassword.Text == string.Empty) {
-
+                if (string.IsNullOrWhiteSpace(txtConfirmPassword.Text))
+                {
                     cvPassword.Visible = true;
                     cvPassword.ForeColor = System.Drawing.Color.Red;
-                    cvPassword.Text = "Confirm password is required!";
+                    cvPassword.Text = "Confirm Password is required!";
                     return;
-                }
-
-
-                String invalidSymbols = "#%^&*()_+=[]{};:'\"\\|,<>";
-                foreach (char c in txtUsername.Text)
-                {
-                    if (invalidSymbols.Contains(c.ToString()))
-                    {
-                        rfvUsername.Visible = true;
-                        rfvUsername.ForeColor = System.Drawing.Color.Red;
-                        rfvUsername.Text = "Username cannot contain prohibited symbols!";
-                        return;
-                    }
-                }
-                foreach (char c in txtPassword.Text)
-                {
-                    if (invalidSymbols.Contains(c.ToString()))
-                    {
-                        rfvPassword.Visible = true;
-                        rfvPassword.ForeColor = System.Drawing.Color.Red;
-                        rfvPassword.Text = "Password cannot contain prohibited symbols!";
-                        return;
-                    }
-                }
-                foreach (char c in txtEmail.Text)
-                {
-                    if (invalidSymbols.Contains(c.ToString()))
-                    {
-                        rfvEmail.Visible = true;
-                        rfvEmail.ForeColor = System.Drawing.Color.Red;
-                        rfvEmail.Text = "Email cannot contain prohibited symbols!";
-                        return;
-                    }
-                }
-                foreach (char c in txtConfirmPassword.Text)
-                {
-                    if (invalidSymbols.Contains(c.ToString()))
-                    {
-                        cvPassword.Visible = true;
-                        cvPassword.ForeColor = System.Drawing.Color.Red;
-                        cvPassword.Text = "Confirm password cannot contain prohibited symbols!";
-                        return;
-                    }
                 }
 
                 if (txtPassword.Text != txtConfirmPassword.Text)
@@ -108,66 +90,152 @@ namespace PitStop
                     return;
                 }
 
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-                con.Open();
+                string invalidSymbols = "#%^&*()+=[]{};:'\"\\|,<>";
 
-                SqlCommand checkCMD1= new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE email ='" + txtEmail.Text + "' ", con);
-                int usernameUsed = (int)checkCMD1.ExecuteScalar();
-
-                SqlCommand checkCMD2 = new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE username ='" + txtUsername.Text + "' ", con);
-                int emailUsed = (int)checkCMD2.ExecuteScalar();
-
-                if (usernameUsed > 0)
+                foreach (char c in txtUsername.Text)
                 {
-                    lblRegisterError.Text = "Username already exists. Please choose a different username.";
-                    return;
-                }
-                else if (emailUsed > 0)
-                {
-                    lblRegisterError.Text = "Email already exists. Please choose a different email.";
-                    return;
-                }
-                else
-                {
-                    SqlCommand cmdUser = new SqlCommand("INSERT INTO UserPitStop (username, password ,email,role) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "', '" + ddlRole.SelectedValue + "')", con);
-                    cmdUser.ExecuteNonQuery();
-                    string role = ddlRole.SelectedValue.ToString();
-                    switch (role)
+                    if (invalidSymbols.Contains(c))
                     {
-                        case "Admin":
-                           SqlCommand cmdRole = new SqlCommand("INSERT INTO Admin (username,password,email) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "')", con);
-                           cmdRole.ExecuteNonQuery();
-                           break;
-                        case "Advisor":
-                            SqlCommand cmdRole2 = new SqlCommand("INSERT INTO Advisor (username,password,email) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "')", con);
-                            cmdRole2.ExecuteNonQuery();
+                        rfvUsername.Visible = true;
+                        rfvUsername.ForeColor = System.Drawing.Color.Red;
+                        rfvUsername.Text = "Username contains prohibited symbols!";
+                        return;
+                    }
+                }
+
+                foreach (char c in txtEmail.Text)
+                {
+                    if (invalidSymbols.Contains(c))
+                    {
+                        rfvEmail.Visible = true;
+                        rfvEmail.ForeColor = System.Drawing.Color.Red;
+                        rfvEmail.Text = "Email contains prohibited symbols!";
+                        return;
+                    }
+                }
+
+                foreach (char c in txtPassword.Text)
+                {
+                    if (invalidSymbols.Contains(c))
+                    {
+                        rfvPassword.Visible = true;
+                        rfvPassword.ForeColor = System.Drawing.Color.Red;
+                        rfvPassword.Text = "Password contains prohibited symbols!";
+                        return;
+                    }
+                }
+
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+                {
+                    con.Open();
+
+                    // =============================
+                    // Check Email
+                    // =============================
+
+                    SqlCommand checkEmail = new SqlCommand(
+                        "SELECT COUNT(*) FROM UserPitStop WHERE email=@Email", con);
+
+                    checkEmail.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+
+                    int emailUsed = Convert.ToInt32(checkEmail.ExecuteScalar());
+
+                    if (emailUsed > 0)
+                    {
+                        lblRegisterError.Visible = true;
+                        lblRegisterError.ForeColor = System.Drawing.Color.Red;
+                        lblRegisterError.Text = "Email already exists.";
+                        return;
+                    }
+
+                    // =============================
+                    // Check Username
+                    // =============================
+
+                    SqlCommand checkUsername = new SqlCommand(
+                        "SELECT COUNT(*) FROM UserPitStop WHERE username=@Username", con);
+
+                    checkUsername.Parameters.AddWithValue("@Username", txtUsername.Text.Trim());
+
+                    int usernameUsed = Convert.ToInt32(checkUsername.ExecuteScalar());
+
+                    if (usernameUsed > 0)
+                    {
+                        lblRegisterError.Visible = true;
+                        lblRegisterError.ForeColor = System.Drawing.Color.Red;
+                        lblRegisterError.Text = "Username already exists.";
+                        return;
+                    }
+
+                    // =============================
+                    // Insert into UserPitStop
+                    // =============================
+
+                    SqlCommand cmdUser = new SqlCommand(
+                        @"INSERT INTO UserPitStop
+                (username,password,email,role)
+                VALUES
+                (@Username,@Password,@Email,@UserType)", con);
+
+                    cmdUser.Parameters.AddWithValue("@Username", txtUsername.Text.Trim());
+                    cmdUser.Parameters.AddWithValue("@Password", txtPassword.Text);
+                    cmdUser.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+                    cmdUser.Parameters.AddWithValue("@UserType", ddlRole.SelectedValue);
+
+                    cmdUser.ExecuteNonQuery();
+
+                    // =============================
+                    // Insert into role table
+                    // =============================
+
+                    string tableName = "";
+
+                    switch (ddlRole.SelectedValue.ToLower())
+                    {
+                        case "admin":
+                            tableName = "Admin";
                             break;
-                        case "Student":
-                            SqlCommand cmdRole3 = new SqlCommand("INSERT INTO Students (username,password,email) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "', '" + txtEmail.Text + "')", con);
-                            cmdRole3.ExecuteNonQuery();
+
+                        case "advisor":
+                            tableName = "Advisor";
                             break;
+
+                        case "student":
+                            tableName = "Students";
+                            SqlCommand cmdGame = new SqlCommand("INSERT INTO Gamification (Id) VALUES (@Id)", con);
+                            cmdGame.Parameters.AddWithValue("@Id", txtUsername.Text.Trim());
+                            cmdGame.ExecuteNonQuery();
+                            break;
+
                         default:
+                            lblRegisterError.Visible = true;
+                            lblRegisterError.ForeColor = System.Drawing.Color.Red;
                             lblRegisterError.Text = "Invalid role selected.";
                             return;
                     }
-                    
-                }
-                con.Close();
 
+                    SqlCommand cmdRole = new SqlCommand(
+                        $"INSERT INTO {tableName} (username,password,email) VALUES (@Username,@Password,@Email)", con);
+
+                    cmdRole.Parameters.AddWithValue("@Username", txtUsername.Text.Trim());
+                    cmdRole.Parameters.AddWithValue("@Password", txtPassword.Text);
+                    cmdRole.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+
+                    cmdRole.ExecuteNonQuery();
+                }
+
+                // =============================
+                // Success
+                // =============================
+
+                Response.Redirect("Login.aspx");
             }
             catch (Exception ex)
             {
+                lblRegisterError.Visible = true;
                 lblRegisterError.ForeColor = System.Drawing.Color.Red;
-                lblRegisterError.Text = "An error occurred: " + ex.Message;
-
+                lblRegisterError.Text = ex.Message;
             }
         }
-
-        protected void lbLogin_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Login.aspx");
-        }
-
-        
     }
 }

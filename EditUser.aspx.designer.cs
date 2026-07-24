@@ -33,24 +33,6 @@ namespace PitStop
         protected global::System.Web.UI.WebControls.LinkButton lbDashboard;
 
         /// <summary>
-        /// lbPitWallTasks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lbPitWallTasks;
-
-        /// <summary>
-        /// lbLeaderboard control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lbLeaderboard;
-
-        /// <summary>
         /// vsProfile control.
         /// </summary>
         /// <remarks>
@@ -93,7 +75,7 @@ namespace PitStop
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListBox ddUser;
+        protected global::System.Web.UI.WebControls.DropDownList ddUser;
 
         /// <summary>
         /// TBUsername control.
@@ -219,7 +201,7 @@ namespace PitStop
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListBox ddRole;
+        protected global::System.Web.UI.WebControls.DropDownList ddRole;
 
         /// <summary>
         /// lblStatus control.

@@ -15,9 +15,39 @@ namespace PitStop
         private string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["LoggedInUserId"] == null)
+            if (Session["username"] == null)
             {
-                Session["LoggedInUserId"] = 1;
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string sqlQuery = "SELECT TOP 1 Id, username, role FROM UserPitStop ORDER BY Id ASC";
+                    using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
+                    {
+                        try
+                        {
+                            con.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    Session["username"] = reader["username"].ToString();
+                                    Session["role"] = reader["role"].ToString();
+                                    Session["LoggedInUserId"] = Convert.ToInt32(reader["Id"]);
+                                }
+                            }
+                            con.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            lblStatus.Text = "Error: " + ex.Message;
+                        }
+                    }
+                }
+            }
+
+            if (Session["role"] == "admin")
+            {
+                LinkButton2.Visible = false;
+                lbLeaderboard.Visible = false;
             }
 
             if (!IsPostBack)
@@ -28,13 +58,27 @@ namespace PitStop
 
         private void LoadUserProfile()
         {
-            int userId = Convert.ToInt32(Session["LoggedInUserId"]);
+            string username = Session["username"].ToString();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string sqlQuery = "SELECT username, password, firstName, lastName, email, phoneNumber, avatarPath FROM Students WHERE Id = @StudentId";
+                string Tables = "";
+                switch (Session["role"].ToString().ToLower())
+                {
+                    case "admin":
+                        Tables = "Admin";
+                        break;
+                    case "student":
+                        Tables = "Students";
+                        break;
+                    case "advisor":
+                        Tables = "Advisors";
+                        break;
+                }
+
+                string sqlQuery = $"SELECT username, password, firstName, lastName, email, phoneNumber, avatarPath FROM {Tables} WHERE username = @Username";
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
-                    cmd.Parameters.AddWithValue("@StudentId", userId);
+                    cmd.Parameters.AddWithValue("@Username", username);
                     try
                     {
                         con.Open();
@@ -67,7 +111,6 @@ namespace PitStop
 
         protected void btnSaveProfile_Click(object sender, EventArgs e)
         {
-            int userId = Convert.ToInt32(Session["LoggedInUserId"]);
             string username = TBUsername.Text.Trim();
             string password = TBPassword.Text.Trim();
             string firstName = TBFirstName.Text.Trim();
@@ -93,20 +136,30 @@ namespace PitStop
                         Directory.CreateDirectory(folderPath);
                     }
 
+                    int userID;
+                    using (SqlConnection con = new SqlConnection(connectionString))
+                    {
+                        
+                        SqlCommand cmdGetUserID = new SqlCommand("SELECT Id FROM UserPitStop WHERE username = @username", con);
+                        cmdGetUserID.Parameters.AddWithValue("@username", username);
+                        con.Open();
+                        userID = Convert.ToInt32(cmdGetUserID.ExecuteScalar());
+                        con.Close();
+                    }
 
-                        string extension = Path.GetExtension(fileUploadAvatar.FileName);
-                        if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
-                        {
-                            string fileName = "avatar_" + userId + "_" + Guid.NewGuid().ToString().Substring(0, 8) + extension;
-                            string savePath = Path.Combine(folderPath, fileName);
-                            fileUploadAvatar.SaveAs(savePath);
-                            newAvatarPath = "~/Uploads/Avatars/" + fileName;
-                        }
-                        else
-                        {
-                            lblStatus.Text = "Invalid file type. Please upload an image file.";
-                            return;
-                        }
+                    string extension = Path.GetExtension(fileUploadAvatar.FileName);
+                    if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
+                    {
+                        string fileName = "avatar_" + userID + "_" + Guid.NewGuid().ToString().Substring(0, 8) + extension;
+                        string savePath = Path.Combine(folderPath, fileName);
+                        fileUploadAvatar.SaveAs(savePath);
+                        newAvatarPath = "~/Uploads/Avatars/" + fileName;
+                    }
+                    else
+                    {
+                        lblStatus.Text = "Invalid file type. Please upload an image file.";
+                        return;
+                    }
 
                     }
                 
@@ -117,14 +170,27 @@ namespace PitStop
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
+                string Tables = "";
+                switch (Session["role"].ToString())
+                {
+                    case "admin":
+                        Tables = "Admin";
+                        break;
+                    case "student":
+                        Tables = "Students";
+                        break;
+                    case "advisor":
+                        Tables = "Advisors";
+                        break;
+                }
                 string sqlQuery;
                 if (newAvatarPath != null)
                     
                 {
-                    sqlQuery = "UPDATE Students SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum, avatarPath = @AvatarPath WHERE Id = @StudentId";
+                    sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum, avatarPath = @AvatarPath WHERE Id = @Id";
                 }
                 else { 
-                    sqlQuery = "UPDATE Students SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum WHERE Id = @StudentId";
+                    sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum WHERE Id = @Id";
                 }
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
@@ -137,7 +203,7 @@ namespace PitStop
                     if (newAvatarPath != null) {
                         cmd.Parameters.AddWithValue("@AvatarPath", newAvatarPath);
                     }
-                    cmd.Parameters.AddWithValue("@StudentId", userId);
+                    cmd.Parameters.AddWithValue("@Id", Session["LoggedInUserId"]);
                     try
                     {
                         con.Open();

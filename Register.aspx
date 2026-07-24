@@ -67,7 +67,7 @@
             <asp:Label ID="lblRegisterError" runat="server" CssClass="form-error" Visible="false"></asp:Label>
 
             <p class="auth-footer">Already have an account? <a href="~/Login.aspx" runat="server">
-                <asp:LinkButton ID="lbLogin" runat="server" OnClick="lbLogin_Click">Log In</asp:LinkButton>
+                <asp:LinkButton ID="lbLogin" runat="server" OnClick="lbLogin_Click" CausesValidation="False">Log In</asp:LinkButton>
                 </a></p>
         </div>
     </div>

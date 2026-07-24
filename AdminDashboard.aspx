@@ -15,15 +15,15 @@
             </div>
         </header>
         <div>
-        </div>
+            &nbsp;</div>
         <nav class="sidebar-navigation">
         
             <asp:LinkButton ID="lbUserProfile" runat="server" PostBackUrl="~/ManageUserProfile.aspx" OnClick="lbUserProfile_Click">User Profile</asp:LinkButton>
         
-            <asp:LinkButton ID="lbEditUser" runat="server" PostBackUrl="~/EditUser.aspx.cs" OnClick="lbEditUser_Click">Manage User</asp:LinkButton>
-            <asp:LinkButton ID="lbEditPitWall" runat="server" PostBackUrl="~/PitWallTasks.aspx" OnClick="lbEditPitWall_Click">Pit Wall Tasks</asp:LinkButton>
+            <asp:LinkButton ID="lbEditUser" runat="server" PostBackUrl="~/EditUser.aspx" OnClick="lbEditUser_Click">Manage User</asp:LinkButton>
+            <asp:LinkButton ID="lbEditPitWall" runat="server" PostBackUrl="~/AdvisorDashboard.aspx" OnClick="lbEditPitWall_Click">Pit Wall Tasks</asp:LinkButton>
         
-            <asp:LinkButton ID="lbRacerLeaderboard" runat="server" OnClick="lbRacerLeaderboard_Click" PostBackUrl="~/StudentLeaderboard.aspx">Racer Leaderboard</asp:LinkButton>
+            <asp:LinkButton ID="lbRacerLeaderboard" runat="server" OnClick="lbRacerLeaderboard_Click" PostBackUrl="~/EditLeaderboard.aspx">Racer Leaderboard</asp:LinkButton>
         
         </nav>
         <main class="content-workspace">
