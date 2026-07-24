@@ -68,11 +68,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\Dashboard.aspx" />
+    <Content Include="AdvisorDashboard.aspx" />
     <Content Include="Content\member.css" />
     <Content Include="Content\site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="ManageUserProfile.aspx" />
+    <Content Include="PitStopStudent.mdf" />
+    <Content Include="PitStopStudent_log.ldf">
+      <DependentUpon>PitStopStudent.mdf</DependentUpon>
+    </Content>
     <Content Include="PitWallTasks.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="StudentDashboard.aspx" />
@@ -87,6 +92,13 @@
     </Compile>
     <Compile Include="Admin\Dashboard.aspx.designer.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdvisorDashboard.aspx.cs">
+      <DependentUpon>AdvisorDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdvisorDashboard.aspx.designer.cs">
+      <DependentUpon>AdvisorDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -171,6 +183,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
