@@ -121,6 +121,19 @@ namespace PitStop
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                // 1. Force ASP.NET to render the __doPostBack script on the page
+                Page.ClientScript.RegisterForEventValidation(gvTasks.UniqueID, "Select$" + e.Row.RowIndex);
+
+                // 2. Attach click event to cells (excluding the command buttons cell so edit/delete still work)
+                for (int i = 0; i < e.Row.Cells.Count - 1; i++)
+                {
+                    e.Row.Cells[i].Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvTasks, "Select$" + e.Row.RowIndex);
+                    e.Row.Cells[i].Style["cursor"] = "pointer";
+                }
+
+                // 3. Keep delete confirmation prompt intact
+                LinkButton deleteButton = e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>()
+                    .FirstOrDefault(b => b.CommandName == "Delete");
 
                 System.Web.UI.WebControls.LinkButton deleteButton = e.Row.Cells[6].Controls.OfType<System.Web.UI.WebControls.LinkButton>().FirstOrDefault(b => b.CommandName == "Delete");
 
