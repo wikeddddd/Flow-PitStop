@@ -162,17 +162,20 @@ namespace PitStop
                 LinkButton deleteButton = e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>()
                     .FirstOrDefault(b => b.CommandName == "Delete");
 
-                System.Web.UI.WebControls.LinkButton deleteButton = e.Row.Cells[6].Controls.OfType<System.Web.UI.WebControls.LinkButton>().FirstOrDefault(b => b.CommandName == "Delete");
+                // 3. Keep delete confirmation prompt intac
 
                 if (deleteButton != null)
                 {
-                    deleteButton.OnClientClick = "return confirm('Are you sure you want to delete this task?');";
-                }
+                    if (deleteButton != null)
+                    {
+                        deleteButton.OnClientClick = "return confirm('Are you sure you want to delete this task?');";
+                    }
 
-                string status = DataBinder.Eval(e.Row.DataItem, "status").ToString();
-                TableCell statusCell = e.Row.Cells[5];
-                string cssClass = status == "Approved" ? "status-approved" : status == "Rejected" ? "status-rejected" : "status-pending";
-                statusCell.Text = $"<span class='{cssClass}'>{status}</span>";
+                    string status = DataBinder.Eval(e.Row.DataItem, "status").ToString();
+                    TableCell statusCell = e.Row.Cells[5];
+                    string cssClass = status == "Approved" ? "status-approved" : status == "Rejected" ? "status-rejected" : "status-pending";
+                    statusCell.Text = $"<span class='{cssClass}'>{status}</span>";
+                }
             }
         }
 
