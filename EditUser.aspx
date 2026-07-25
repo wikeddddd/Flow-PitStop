@@ -12,7 +12,7 @@
         <div class="profile-card">
             <h2>Edit User</h2>
             <asp:Image ID="imgAvatar" runat="server" />
-            <asp:LinkButton ID="lbDashboard" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
+            <asp:LinkButton ID="lbDashboard" runat="server" PostBackUrl="~/AdminDashboard.aspx">Dashboard</asp:LinkButton>
             <asp:ValidationSummary ID="vsProfile" runat="server" ValidationGroup="Profile" HeaderText="Please correct these errors" />
         </div>
         <div class="form-group">
