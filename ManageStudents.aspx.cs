@@ -62,18 +62,28 @@ namespace PitStop
             string query = "UPDATE Students SET firstName = @firstName, lastName = @lastName, " +
                            "schoolName = @schoolName, email = @email, phoneNumber = @phoneNumber WHERE Id = @Id";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@firstName", firstName);
-                command.Parameters.AddWithValue("@lastName", lastName);
-                command.Parameters.AddWithValue("@schoolName", schoolName);
-                command.Parameters.AddWithValue("@email", email);
-                command.Parameters.AddWithValue("@phoneNumber", phoneNumber);
-                command.Parameters.AddWithValue("@Id", studentId);
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@firstName", firstName);
+                    command.Parameters.AddWithValue("@lastName", lastName);
+                    command.Parameters.AddWithValue("@schoolName", schoolName);
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@phoneNumber", phoneNumber);
+                    command.Parameters.AddWithValue("@Id", studentId);
 
-                connection.Open();
-                command.ExecuteNonQuery();
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                lblMessage.Text = "Student updated.";
+                lblMessage.CssClass = "feedback-msg success";
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error updating student: " + ex.Message;
+                lblMessage.CssClass = "feedback-msg error";
             }
 
             gvStudents.EditIndex = -1;
@@ -87,12 +97,27 @@ namespace PitStop
             string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
             string query = "DELETE FROM Students WHERE Id = @Id";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id", studentId);
-                connection.Open();
-                command.ExecuteNonQuery();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id", studentId);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                lblMessage.Text = "Student deleted.";
+                lblMessage.CssClass = "feedback-msg success";
+            }
+            catch (SqlException)
+            {
+                lblMessage.Text = "Can't delete this student — they still have Tasks or Gamification records linked to their account.";
+                lblMessage.CssClass = "feedback-msg error";
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error deleting student: " + ex.Message;
+                lblMessage.CssClass = "feedback-msg error";
             }
 
             BindStudents();

@@ -8,6 +8,8 @@
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
     <uc:AdvisorNav runat="server" />
     <div class="advisor-card">
+        <asp:Label ID="lblMessage" runat="server" CssClass="feedback-msg"></asp:Label>
+
         <h3>Registered Students</h3>
         <asp:GridView ID="gvStudents" runat="server" AutoGenerateColumns="false"
             CssClass="table-data" DataKeyNames="Id"

@@ -20,39 +20,6 @@ namespace PitStop
             }
         }
 
-        protected void btnApprove_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(hfSelectedTaskId.Value))
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please select a task from the table first!');", true);
-                return;
-            }
-
-            int taskId = int.Parse(hfSelectedTaskId.Value);
-            string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = "UPDATE Tasks SET status = 'Approved' WHERE TaskId = @TaskId";
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@TaskId", taskId);
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                lblMessage.Text = "Task approved successfully!";
-                lblMessage.CssClass = "feedback-msg-success";
-            }
-            catch (Exception ex)
-            {
-                lblMessage.Text = "An error occurred while approving the task.";
-                lblMessage.CssClass = "feedback-msg-error";
-            }
-
-            BindTasks();
-        }
-
         protected void btnAddTask_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid) return;
@@ -83,14 +50,52 @@ namespace PitStop
                 txtDueDate.Text = "";
                 txtStudentId.Text = "";
                 lblMessage.Text = "Task added successfully!";
-                lblMessage.CssClass = "feedback-msg-success";
+                lblMessage.CssClass = "feedback-msg success";
+            }
+            catch (FormatException)
+            {
+                lblMessage.Text = "Student ID and XP Reward must be numbers, and Due Date must be valid.";
+                lblMessage.CssClass = "feedback-msg error";
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error adding task: " + ex.Message;
+                lblMessage.CssClass = "feedback-msg error";
+            }
 
-                
+            BindTasks();
+        }
+
+        protected void btnApprove_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(hfSelectedTaskId.Value))
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please select a task from the table first!');", true);
+                return;
             }
-            catch (Exception ex) {
-                lblMessage.Text = "An error occurred while adding the task.";
-                lblMessage.CssClass = "feedback-msg-error";
+
+            int taskId = int.Parse(hfSelectedTaskId.Value);
+            string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            string query = "UPDATE Tasks SET status = 'Approved' WHERE TaskId = @TaskId";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@TaskId", taskId);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                lblMessage.Text = "Task approved successfully!";
+                lblMessage.CssClass = "feedback-msg success";
             }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error approving task: " + ex.Message;
+                lblMessage.CssClass = "feedback-msg error";
+            }
+
             BindTasks();
         }
 
@@ -177,6 +182,34 @@ namespace PitStop
             BindTasks();
         }
 
+        protected void gvTasks_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            int taskId = Convert.ToInt32(gvTasks.DataKeys[e.RowIndex].Values["TaskId"]);
+
+            string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            string query = "DELETE FROM Tasks WHERE TaskId = @TaskId";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@TaskId", taskId);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                lblMessage.Text = "Task deleted.";
+                lblMessage.CssClass = "feedback-msg success";
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error deleting task: " + ex.Message;
+                lblMessage.CssClass = "feedback-msg error";
+            }
+
+            BindTasks();
+        }
+
         protected void gvTasks_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -202,39 +235,6 @@ namespace PitStop
                 string cssClass = status == "Approved" ? "status-approved" : status == "Rejected" ? "status-rejected" : "status-pending";
                 statusCell.Text = $"<span class='{cssClass}'>{status}</span>";
             }
-        }
-
-        protected void gvStudents_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            int studentId = Convert.ToInt32(gvStudents.DataKeys[e.RowIndex].Value);
-
-            string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = "DELETE FROM Students WHERE Id = @Id";
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@Id", studentId);
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                lblMessage.Text = "Student deleted.";
-                lblMessage.CssClass = "feedback-msg success";
-            }
-            catch (SqlException)
-            {
-                lblMessage.Text = "Can't delete this student — they still have Tasks or Gamification records linked to their account.";
-                lblMessage.CssClass = "feedback-msg error";
-            }
-            catch (Exception ex)
-            {
-                lblMessage.Text = "Error deleting student: " + ex.Message;
-                lblMessage.CssClass = "feedback-msg error";
-            }
-
-            BindStudents();
         }
 
         protected void gvTasks_SelectedIndexChanged(object sender, EventArgs e)

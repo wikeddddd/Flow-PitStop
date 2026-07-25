@@ -7,8 +7,9 @@
 
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
     <uc:AdvisorNav runat="server" />
-    <asp:Label ID="lblMessage" runat="server" CssClass="feedback-msg"></asp:Label>
     <div class="advisor-card">
+        <asp:Label ID="lblMessage" runat="server" CssClass="feedback-msg"></asp:Label>
+
         <h3>Add New Task</h3>
         <asp:HiddenField ID="hfSelectedTaskId" runat="server" />
         <table>
@@ -46,15 +47,15 @@
                 </td>
             </tr>
         </table>
-        <asp:Button ID="btnAddTask" runat="server" Text="Add Task" OnClick="btnAddTask_Click" CssClass="btn-primary"/>
-        <asp:Button ID="btnApprove" runat="server" Text="Approve" OnClick="btnApprove_Click" CssClass="btn-primary"/>
+        <asp:Button ID="btnAddTask" runat="server" Text="Add Task" OnClick="btnAddTask_Click" CssClass="btn-primary" />
+        <asp:Button ID="btnApprove" runat="server" Text="Approve" OnClick="btnApprove_Click" CssClass="btn-primary" />
         <br /><br />
 
         <asp:GridView ID="gvTasks" runat="server" AutoGenerateColumns="false"
             CssClass="table-data" DataKeyNames="TaskId,StudentId"
             OnRowEditing="gvTasks_RowEditing"
             OnRowCancelingEdit="gvTasks_RowCancelingEdit"
-            OnRowUpdating="gvTasks_RowUpdating" 
+            OnRowUpdating="gvTasks_RowUpdating"
             OnRowDeleting="gvTasks_RowDeleting"
             OnRowDataBound="gvTasks_RowDataBound"
             OnSelectedIndexChanged="gvTasks_SelectedIndexChanged">
@@ -68,6 +69,7 @@
                 <asp:BoundField DataField="StudentName" HeaderText="Student" ReadOnly="true" />
                 <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" />
             </Columns>
+            <EmptyDataTemplate>No tasks found.</EmptyDataTemplate>
         </asp:GridView>
     </div>
 </asp:Content>
