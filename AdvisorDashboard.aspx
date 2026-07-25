@@ -6,7 +6,6 @@
 </asp:Content>
 
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
-    <uc:AdvisorNav runat="server" />
 
     <header class="dashboard-header">
         <div class="user-profile-tag">
@@ -34,4 +33,6 @@
             <EmptyDataTemplate>No students registered yet.</EmptyDataTemplate>
         </asp:GridView>
     </div>
-</asp:Content>
+    <uc:AdvisorNav runat="server" />
+
+    </asp:Content>

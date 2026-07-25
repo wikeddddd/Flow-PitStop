@@ -77,6 +77,7 @@
     <Content Include="EditUser.aspx" />
     <Content Include="ManageStudents.aspx" />
     <Content Include="ManageTasks.aspx" />
+    <Content Include="ManageAdvisorProfile.aspx" />
     <Content Include="ManageUserProfile.aspx" />
     <Content Include="PitStopStudent.mdf" />
     <Content Include="PitStopStudent_log.ldf">
@@ -147,6 +148,13 @@
     </Compile>
     <Compile Include="ManageTasks.aspx.designer.cs">
       <DependentUpon>ManageTasks.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageAdvisorProfile.aspx.cs">
+      <DependentUpon>ManageAdvisorProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageAdvisorProfile.aspx.designer.cs">
+      <DependentUpon>ManageAdvisorProfile.aspx</DependentUpon>
     </Compile>
     <Compile Include="ManageUserProfile.aspx.cs">
       <DependentUpon>ManageUserProfile.aspx</DependentUpon>

@@ -9,15 +9,36 @@
 
 namespace PitStop
 {
+
+
     public partial class AdvisorDashboard
     {
-        /// <summary>Displays the logged-in advisor's username.</summary>
+
+        /// <summary>
+        /// lblAdvisorName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAdvisorName;
 
-        /// <summary>Displays the total number of registered students.</summary>
+        /// <summary>
+        /// lblStudentCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblStudentCount;
 
-        /// <summary>Shows the 5 most recently registered students.</summary>
+        /// <summary>
+        /// gvRecentStudents control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvRecentStudents;
     }
 }
