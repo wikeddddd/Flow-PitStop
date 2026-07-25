@@ -6,8 +6,8 @@ namespace PitStop
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string role = Session["UserRole"]?.ToString();
-            string userName = Session["UserName"]?.ToString();
+            string role = Session["role"]?.ToString();
+            string userName = Session["username"]?.ToString();
 
             if (!string.IsNullOrEmpty(userName))
             {
@@ -15,13 +15,17 @@ namespace PitStop
             }
 
             // Point Dashboard link to the correct role's dashboard
-            if (role == "Admin")
+            if (role == "admin")
             {
-                dashboardLink.Attributes["href"] = "~/Admin/Dashboard.aspx";
+                dashboardLink.Attributes["href"] = ResolveUrl("~/AdminDashboard.aspx");
+            }
+            else if (role == "advisor")
+            {
+                dashboardLink.Attributes["href"] = ResolveUrl("~/AdvisorDashboard.aspx");
             }
             else
             {
-                dashboardLink.Attributes["href"] = "~/Student/Dashboard.aspx";
+                dashboardLink.Attributes["href"] = ResolveUrl("~/StudentDashboard.aspx");
             }
         }
 

@@ -14,6 +14,25 @@ namespace PitStop
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["role"] == null)
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
+
+            string role = Session["role"].ToString();
+
+            if (role != "advisor" && role != "admin")
+            {
+                Response.Redirect("~/StudentDashboard.aspx");
+                return;
+            }
+
+            if (role == "admin")
+            {
+                advisorNav.Visible = false;
+            }
+
             if (!IsPostBack)
             {
                 BindTasks();

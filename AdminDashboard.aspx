@@ -21,7 +21,7 @@
             <asp:LinkButton ID="lbUserProfile" runat="server" PostBackUrl="~/ManageUserProfile.aspx" OnClick="lbUserProfile_Click">User Profile</asp:LinkButton>
         
             <asp:LinkButton ID="lbEditUser" runat="server" PostBackUrl="~/EditUser.aspx" OnClick="lbEditUser_Click">Manage User</asp:LinkButton>
-            <asp:LinkButton ID="lbEditPitWall" runat="server" PostBackUrl="~/AdvisorDashboard.aspx" OnClick="lbEditPitWall_Click">Pit Wall Tasks</asp:LinkButton>
+            <asp:LinkButton ID="lbEditPitWall" runat="server" PostBackUrl="~/ManageTasks.aspx" OnClick="lbEditPitWall_Click">Pit Wall Tasks</asp:LinkButton>
         
             <asp:LinkButton ID="lbRacerLeaderboard" runat="server" OnClick="lbRacerLeaderboard_Click" PostBackUrl="~/EditLeaderboard.aspx">Racer Leaderboard</asp:LinkButton>
         

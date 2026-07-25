@@ -10,10 +10,11 @@
 
 
     
+    <asp:Panel ID="pnlNav" runat="server">
         <nav class="sidebar-nav">
             <asp:LinkButton ID="lnkTasks" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
         </nav>
-     </div>
+    </asp:Panel>
         <main class="content-workspace">
             <h1 class="section-headline">Driver Standings</h1>
             <div class="dashboard-card">

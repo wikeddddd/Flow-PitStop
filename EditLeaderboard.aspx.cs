@@ -17,6 +17,12 @@ namespace PitStop
             {
                 Session["LoggedInUserId"] = 1;
             }
+
+            if (Session["role"] != null && Session["role"].ToString() == "admin")
+            {
+                lnkTasks.Visible = false;
+            }
+
             if (!IsPostBack) {
                 BindLeaderboardStandings();
                 BindDropdowns();

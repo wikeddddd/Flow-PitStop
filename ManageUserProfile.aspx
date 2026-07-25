@@ -12,9 +12,11 @@
         <div class="profile-card">
             <h2>Manage Profile</h2>
             <asp:Image ID="imgAvatar" runat="server" />
-            <asp:LinkButton ID="LinkButton1" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
-            <asp:LinkButton ID="LinkButton2" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
-            <asp:LinkButton ID="lbLeaderboard" runat="server" PostBackUrl="~/StudentLeaderboard.aspx">Leaderboard</asp:LinkButton>
+            <asp:Panel ID="pnlNav" runat="server">
+                <asp:LinkButton ID="LinkButton1" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
+                <asp:LinkButton ID="LinkButton2" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
+                <asp:LinkButton ID="lbLeaderboard" runat="server" PostBackUrl="~/StudentLeaderboard.aspx">Leaderboard</asp:LinkButton>
+            </asp:Panel>
             <asp:ValidationSummary ID="vsProfile" runat="server" ValidationGroup="Profile" HeaderText="Please correct these errors" />
         </div>
         <div class="form-group">

@@ -15,6 +15,15 @@ namespace PitStop
     {
 
         /// <summary>
+        /// advisorNav control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::PitStop.AdvisorNav advisorNav;
+
+        /// <summary>
         /// lblMessage control.
         /// </summary>
         /// <remarks>

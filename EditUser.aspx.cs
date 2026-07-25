@@ -44,6 +44,10 @@ namespace PitStop
                 }
             }
 
+            if (Session["role"] != null && Session["role"].ToString() == "admin")
+            {
+                lbDashboard.Visible = false;
+            }
 
             if (!IsPostBack)
             {

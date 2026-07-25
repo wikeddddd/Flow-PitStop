@@ -45,7 +45,7 @@ namespace PitStop
 
         protected void lbEditPitWall_Click(object sender, EventArgs e)
         {
-            Response.Redirect("AdvisorDashboard.aspx");
+            Response.Redirect("ManageTask.aspx");
         }
     }
 }
