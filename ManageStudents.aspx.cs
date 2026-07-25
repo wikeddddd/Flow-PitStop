@@ -32,7 +32,7 @@ namespace PitStop
         private void BindStudents()
         {
             string connStr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = @"SELECT Id, username, firstName, lastName, schoolName, email, phoneNumber
+            string query = @"SELECT StudentId as Id, username, firstName, lastName, schoolName, email, phoneNumber
                              FROM   Students";
 
             using (SqlConnection con = new SqlConnection(connStr))
@@ -87,7 +87,7 @@ namespace PitStop
                                       schoolName  = @schoolName,
                                       email       = @email,
                                       phoneNumber = @phoneNumber
-                               WHERE  Id = @Id";
+                               WHERE  StudentId = @Id";
 
             try
             {
@@ -120,34 +120,7 @@ namespace PitStop
         // ------------------------------------------------------------------
         // Soft delete — sets IsActive = 0, no data is removed
         // ------------------------------------------------------------------
-        protected void gvStudents_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            int studentId = Convert.ToInt32(gvStudents.DataKeys[e.RowIndex].Value);
 
-            string connStr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query   = "UPDATE Students SET IsActive = 0 WHERE Id = @Id";
-
-            try
-            {
-                using (SqlConnection con = new SqlConnection(connStr))
-                {
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@Id", studentId);
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                lblMessage.Text     = "Student deactivated. Their tasks and records have been preserved.";
-                lblMessage.CssClass = "feedback-msg success";
-            }
-            catch (Exception ex)
-            {
-                lblMessage.Text     = "Error deactivating student: " + ex.Message;
-                lblMessage.CssClass = "feedback-msg error";
-            }
-
-            BindStudents();
-            
-        }
 
         // ------------------------------------------------------------------
         // Confirmation prompt on the Deactivate button
@@ -171,35 +144,6 @@ namespace PitStop
         }
 
 
-        protected void gvDeactivated_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName != "Restore") return;
 
-            int studentId = Convert.ToInt32(e.CommandArgument);
-
-            string connStr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query   = "UPDATE Students SET IsActive = 1 WHERE Id = @Id";
-
-            try
-            {
-                using (SqlConnection con = new SqlConnection(connStr))
-                {
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@Id", studentId);
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                lblMessage.Text     = "Student restored successfully.";
-                lblMessage.CssClass = "feedback-msg success";
-            }
-            catch (Exception ex)
-            {
-                lblMessage.Text     = "Error restoring student: " + ex.Message;
-                lblMessage.CssClass = "feedback-msg error";
-            }
-
-            BindStudents();
-          
-        }
     }
 }

@@ -50,14 +50,14 @@
                 </div>
                 <div class="task-card">
                     <h3>Complete Duty Log</h3>
-                    <asp:GridView ID="gvTasks" runat="server" AutoGenerateColumns="False" DataKeyNames="Id">
+                    <asp:GridView ID="gvTasks" runat="server" AutoGenerateColumns="False" DataKeyNames="StudentId">
                         <Columns>
                             <asp:BoundField DataField="title" HeaderText="title" SortExpression="title" />
                             <asp:BoundField DataField="description" HeaderText="description" SortExpression="description" />
                             <asp:BoundField DataField="xpReward" HeaderText="xpReward" SortExpression="xpReward" />
                             <asp:BoundField DataField="status" HeaderText="status" SortExpression="status" />
                             <asp:BoundField DataField="dueDate" HeaderText="dueDate" SortExpression="dueDate" />
-                            <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />
+                            <asp:BoundField DataField="StudentId" HeaderText="Id" SortExpression="StudentId" />
                          
                         </Columns>
                     </asp:GridView>

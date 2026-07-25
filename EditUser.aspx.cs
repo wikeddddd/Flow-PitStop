@@ -121,11 +121,12 @@ namespace PitStop
             }
 
             string tableForRole = "";
+            string ID = "";
             switch (roleTable)
             {
-                case "Admin":    tableForRole = "Admin";    break;
-                case "Student":  tableForRole = "Students"; break;
-                case "Advisor":  tableForRole = "Advisors"; break;
+                case "Admin":    ID = "Id";     tableForRole = "Admin";    break;
+                case "Student":  ID = "StudentId"; tableForRole = "Students"; break;
+                case "Advisor":  ID = "AdvisorId";  tableForRole = "Advisors"; break;
                 default:
                     lblStatus.Text = "User does not have a valid role.";
                     return;
@@ -136,7 +137,7 @@ namespace PitStop
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    SqlCommand cmdGetTableId = new SqlCommand($"SELECT Id FROM {tableForRole} WHERE username = @username", con);
+                    SqlCommand cmdGetTableId = new SqlCommand($"SELECT {ID} FROM {tableForRole} WHERE username = @username", con);
                     cmdGetTableId.Parameters.AddWithValue("@username", username);
                     object tableIdObj = cmdGetTableId.ExecuteScalar();
                     if (tableIdObj != null) userToTableId = Convert.ToInt32(tableIdObj);
@@ -184,8 +185,8 @@ namespace PitStop
                     con.Open();
 
                     string sqlQuery = newAvatarPath != null
-                        ? $"UPDATE {tableForRole} SET username=@Username, password=@Password, firstName=@FirstName, lastName=@LastName, email=@Email, phoneNumber=@PhoneNum, avatarPath=@AvatarPath WHERE Id=@UserId"
-                        : $"UPDATE {tableForRole} SET username=@Username, password=@Password, firstName=@FirstName, lastName=@LastName, email=@Email, phoneNumber=@PhoneNum WHERE Id=@UserId";
+                        ? $"UPDATE {tableForRole} SET username=@Username, password=@Password, firstName=@FirstName, lastName=@LastName, email=@Email, phoneNumber=@PhoneNum, avatarPath=@AvatarPath WHERE {ID}=@UserId"
+                        : $"UPDATE {tableForRole} SET username=@Username, password=@Password, firstName=@FirstName, lastName=@LastName, email=@Email, phoneNumber=@PhoneNum WHERE {ID}=@UserId";
 
                     using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                     {

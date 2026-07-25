@@ -26,7 +26,7 @@ namespace PitStop
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
             {
-                string sqlQuery = "SELECT TOP 10 s.Id, s.Name, g.totalXp, g.currentLevel, g.dailyStreak FROM Students s INNER JOIN Gamification g ON s.Id = g.Id ORDER BY g.totalXp DESC";
+                string sqlQuery = "SELECT TOP 10 s.StudentId, s.Name, g.totalXp, g.currentLevel, g.dailyStreak FROM Students s INNER JOIN Gamification g ON s.StudentId = g.Id ORDER BY g.totalXp DESC";
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
                     try

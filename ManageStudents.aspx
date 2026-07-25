@@ -17,7 +17,7 @@
             OnRowEditing="gvStudents_RowEditing"
             OnRowCancelingEdit="gvStudents_RowCancelingEdit"
             OnRowUpdating="gvStudents_RowUpdating"
-            OnRowDeleting="gvStudents_RowDeleting"
+            
             OnRowDataBound="gvStudents_RowDataBound">
             <Columns>
                 <asp:BoundField DataField="Id"          HeaderText="ID"         ReadOnly="true" />

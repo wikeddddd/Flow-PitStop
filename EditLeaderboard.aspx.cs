@@ -63,10 +63,10 @@ namespace PitStop
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
             {
-                string sqlQuery = @"SELECT TOP 10 s.Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
+                string sqlQuery = @"SELECT TOP 10 s.StudentId as Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
                                            g.totalXp AS TotalXp, g.currentLevel AS CurrentLevel, g.dailyStreak AS DailyStreak 
                                     FROM Students s 
-                                    INNER JOIN Gamification g ON s.Id = g.Id 
+                                    INNER JOIN Gamification g ON s.StudentId = g.Id 
                                     ORDER BY g.totalXp DESC";
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
@@ -133,10 +133,10 @@ namespace PitStop
                 return;
             }
 
-            string query = @"SELECT s.Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
+            string query = @"SELECT s.StudentId as Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
                                      g.totalXp AS TotalXp, g.currentLevel AS CurrentLevel, g.dailyStreak AS DailyStreak 
-                              FROM Students s INNER JOIN Gamification g ON s.Id = g.Id 
-                              WHERE s.Id = @studentID 
+                              FROM Students s INNER JOIN Gamification g ON s.StudentId = g.Id 
+                              WHERE s.StudentId = @studentID 
                               ORDER BY g.totalXp DESC";
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
             {
@@ -170,9 +170,9 @@ namespace PitStop
                 return;
             }
 
-            string query = @"SELECT s.Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
+            string query = @"SELECT s.StudentId as Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
                                      g.totalXp AS TotalXp, g.currentLevel AS CurrentLevel, g.dailyStreak AS DailyStreak 
-                              FROM Students s INNER JOIN Gamification g ON s.Id = g.Id 
+                              FROM Students s INNER JOIN Gamification g ON s.StudentId = g.Id 
                               WHERE s.schoolName = @schoolName 
                               ORDER BY g.totalXp DESC";
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
@@ -234,8 +234,8 @@ namespace PitStop
                 {
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(
-                        "UPDATE Students SET firstName=@FirstName, schoolName=@SchoolName WHERE Id=@Id; " +
-                        "UPDATE Gamification SET totalXp=@TotalXp, currentLevel=@CurrentLevel, dailyStreak=@DailyStreak WHERE Id=@Id", con))
+                        "UPDATE Students SET firstName=@FirstName, schoolName=@SchoolName WHERE StudentId=@Id; " +
+                        "UPDATE Gamification SET totalXp=@TotalXp, currentLevel=@CurrentLevel, dailyStreak=@DailyStreak WHERE StudentId=@Id", con))
                     {
                         cmd.Parameters.AddWithValue("@FirstName", firstName);
                         cmd.Parameters.AddWithValue("@SchoolName", schoolName);
@@ -270,7 +270,7 @@ namespace PitStop
                 {
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(
-                        "DELETE FROM Gamification WHERE Id=@Id; DELETE FROM Students WHERE Id=@Id", con))
+                        "DELETE FROM Gamification WHERE StudentId=@Id; DELETE FROM Students WHERE StudentId=@Id", con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
                         cmd.ExecuteNonQuery();

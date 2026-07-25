@@ -29,9 +29,9 @@
                         <asp:BoundField DataField="DailyStreak" HeaderText="DailyStreak" SortExpression="DailyStreak" />
                     </Columns>
                 </asp:GridView>
-                <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:connectionString %>" SelectCommand="SELECT u.Id, u.FirstName, u.SchoolName, g.TotalXp, g.CurrentLevel, g.DailyStreak 
+                <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:connectionString %>" SelectCommand="SELECT u.StudentId as Id, u.FirstName, u.SchoolName, g.TotalXp, g.CurrentLevel, g.DailyStreak 
                                  FROM Gamification g
-                                 INNER JOIN Students u ON g.Id = u.Id
+                                 INNER JOIN Students u ON g.Id = u.StudentId
                                  ORDER BY g.TotalXp DESC, g.DailyStreak DESC"></asp:SqlDataSource>
             </div>
    

@@ -61,16 +61,20 @@ namespace PitStop
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 string Tables = "";
+                string ID = "";
                 switch (Session["role"].ToString().ToLower())
                 {
                     case "admin":
                         Tables = "Admin";
+                        ID = "Id";
                         break;
                     case "student":
                         Tables = "Students";
+                        ID = "StudentId";
                         break;
                     case "advisor":
                         Tables = "Advisors";
+                        ID = "AdvisorId";
                         break;
                 }
 
@@ -170,26 +174,30 @@ namespace PitStop
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 string Tables = "";
+                string ID = "";
                 switch (Session["role"].ToString())
                 {
                     case "admin":
                         Tables = "Admin";
+                        ID = "Id";
                         break;
                     case "student":
                         Tables = "Students";
+                        ID = "StudentId";
                         break;
                     case "advisor":
                         Tables = "Advisors";
+                        ID = "AdvisorId";
                         break;
                 }
                 string sqlQuery;
                 if (newAvatarPath != null)
                     
                 {
-                    sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum, avatarPath = @AvatarPath WHERE Id = @Id";
+                    sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum, avatarPath = @AvatarPath WHERE {ID} = @Id";
                 }
                 else { 
-                    sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum WHERE Id = @Id";
+                    sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum WHERE {ID} = @Id";
                 }
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {

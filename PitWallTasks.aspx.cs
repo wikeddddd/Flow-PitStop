@@ -41,7 +41,7 @@ namespace PitStop
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string sqlQuery = "SELECT t.Id, t.title, t.description, t.xpReward, t.status, t.dueDate FROM Tasks t INNER JOIN Students st ON t.Id = st.Id WHERE st.Id = @StudentId";
+                string sqlQuery = "SELECT t.StudentId, t.title, t.description, t.xpReward, t.status, t.dueDate FROM Tasks t INNER JOIN Students st ON t.StudentId = st.StudentId WHERE st.StudentId = @StudentId";
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
                     cmd.Parameters.AddWithValue("@StudentId", Convert.ToInt32(Session["LoggedInUserId"]));
@@ -69,7 +69,7 @@ namespace PitStop
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string sqlQuery = "SELECT t.Id, t.title, t.description, t.xpReward, t.status, t.dueDate FROM Tasks t INNER JOIN Students st ON t.Id = st.Id WHERE st.Id = @StudentId";
+                string sqlQuery = "SELECT t.TaskId, t.StudentId, t.title, t.description, t.xpReward, t.status, t.dueDate FROM Tasks t INNER JOIN Students st ON t.StudentId = st.StudentId WHERE st.StudentId = @StudentId";
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
                     cmd.Parameters.AddWithValue("@StudentId", Convert.ToInt32(Session["LoggedInUserId"]));
@@ -82,7 +82,7 @@ namespace PitStop
                             ddlPendingTasks.Items.Add(new ListItem("-- Select a Task --", ""));
                             while (reader.Read())
                             {
-                                ddlPendingTasks.Items.Add(new ListItem(reader["title"].ToString(), reader["Id"].ToString()));
+                                ddlPendingTasks.Items.Add(new ListItem(reader["title"].ToString(), reader["TaskId"].ToString()));
                             }
                         }
                         if (ddlPendingTasks.Items.Count <= 1)
