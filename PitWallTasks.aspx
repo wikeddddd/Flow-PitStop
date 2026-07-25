@@ -13,13 +13,17 @@
             <h1>Pit Wall Tasks</h1>
         </header>
 
-        <nav class="sidebar-nav">
+        <div class="sidebar-nav">
 
-            <asp:LinkButton ID="LinkButton1" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
-            <asp:LinkButton ID="LinkButton2" runat="server" PostBackUrl="~/StudentLeaderboard.aspx">Leaderboard</asp:LinkButton>
-            <asp:LinkButton ID="LinkButton3" runat="server" PostBackUrl="~/ManageUserProfile.aspx">UserProfile</asp:LinkButton>
+            <asp:Panel ID="pnlNav" runat="server">
+                <asp:LinkButton ID="lnkPitWallTasks" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
+                <asp:LinkButton ID="lnkDashboard" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
+                <asp:LinkButton ID="lnkLeaderboard" runat="server" PostBackUrl="~/StudentLeaderboard.aspx">Leaderboard</asp:LinkButton>
+                <asp:LinkButton ID="lnkUserProfile" runat="server" PostBackUrl="~/ManageUserProfile.aspx">UserProfile</asp:LinkButton>
+            </asp:Panel>
 
-        </nav>
+
+        </div>
 
         <main class="content-workspace">
             <div class="grid-layout">
@@ -27,15 +31,19 @@
                     <h3>File Submission Terminal</h3>
                     <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
                     <div class="submission-panel">
-                        
+                        <asp:ValidationSummary ID="vsProfile" runat="server" ValidationGroup="Profile" HeaderText="Please correct these errors" />
                         <asp:Label ID="Label3" runat="server" Text="Select Active Pending Assignment: "></asp:Label>
                         <asp:DropDownList ID="ddlPendingTasks" runat="server" DataTextField="title" DataValueField="TaskId"></asp:DropDownList>
                         
                         
                         <asp:Label ID="Label1" runat="server" Text="Upload Document: "></asp:Label>
-                        <asp:FileUpload ID="fileTaskUpload" runat="server"/>
-                        <asp:RequiredFieldValidator ID="validateFileUpload" runat="server" ErrorMessage="File upload is required" ControlToValidate="fileTaskUpload"></asp:RequiredFieldValidator>
-                        <asp:RegularExpressionValidator ID="reValidateFileUpload" runat="server" ErrorMessage="Please upload a valid document file (PDF, DOC, DOCX)" ValidationExpression="\.pdf|\.doc|\.docx$" ControlToValidate="fileTaskUpload"></asp:RegularExpressionValidator>
+                        <div class="file-submission">
+                            <asp:FileUpload ID="fileTaskUpload" runat="server"/>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="File upload is required" ControlToValidate="fileTaskUpload" ValidationGroup="Profile"></asp:RequiredFieldValidator>
+                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Please upload a valid document file (PDF, DOC, DOCX)" ValidationExpression="\.pdf|\.doc|\.docx$" ControlToValidate="fileTaskUpload" ValidationGroup="Profile"></asp:RegularExpressionValidator>
+
+                        </div>
+
                         <asp:Button ID="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" CausesValidation="false"/>
                         <asp:Label ID="lblStatus" runat="server" Text="Label"></asp:Label>
                     </div>

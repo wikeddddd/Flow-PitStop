@@ -22,7 +22,7 @@ namespace PitStop
             if (!IsPostBack)
             {
                 BindStudents();
-                BindDeactivatedStudents();
+             
             }
         }
 
@@ -33,8 +33,7 @@ namespace PitStop
         {
             string connStr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
             string query = @"SELECT Id, username, firstName, lastName, schoolName, email, phoneNumber
-                             FROM   Students
-                             WHERE  IsActive = 1";
+                             FROM   Students";
 
             using (SqlConnection con = new SqlConnection(connStr))
             {
@@ -43,6 +42,7 @@ namespace PitStop
                 DataTable      dt  = new DataTable();
 
                 con.Open();
+                
                 da.Fill(dt);
                 gvStudents.DataSource = dt;
                 gvStudents.DataBind();
@@ -52,29 +52,7 @@ namespace PitStop
         // ------------------------------------------------------------------
         // Load deactivated students (IsActive = 0)
         // ------------------------------------------------------------------
-        private void BindDeactivatedStudents()
-        {
-            string connStr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = @"SELECT Id, username, firstName, lastName, schoolName, email, phoneNumber
-                             FROM   Students
-                             WHERE  IsActive = 0";
 
-            using (SqlConnection con = new SqlConnection(connStr))
-            {
-                SqlCommand     cmd = new SqlCommand(query, con);
-                SqlDataAdapter da  = new SqlDataAdapter(cmd);
-                DataTable      dt  = new DataTable();
-
-                con.Open();
-                da.Fill(dt);
-
-                gvDeactivated.DataSource = dt;
-                gvDeactivated.DataBind();
-
-                // Hide the whole section if there are no deactivated students
-                pnlDeactivated.Visible = dt.Rows.Count > 0;
-            }
-        }
 
         // ------------------------------------------------------------------
         // Edit / Cancel / Update (active grid)
@@ -168,7 +146,7 @@ namespace PitStop
             }
 
             BindStudents();
-            BindDeactivatedStudents();
+            
         }
 
         // ------------------------------------------------------------------
@@ -192,9 +170,7 @@ namespace PitStop
             }
         }
 
-        // ------------------------------------------------------------------
-        // Restore — sets IsActive = 1 on a deactivated student
-        // ------------------------------------------------------------------
+
         protected void gvDeactivated_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName != "Restore") return;
@@ -223,7 +199,7 @@ namespace PitStop
             }
 
             BindStudents();
-            BindDeactivatedStudents();
+          
         }
     }
 }

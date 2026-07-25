@@ -31,11 +31,5 @@ namespace PitStop
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvStudents;
-
-        /// <summary>Panel that wraps the deactivated students section. Hidden when empty.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlDeactivated;
-
-        /// <summary>Grid showing deactivated (IsActive = 0) students with a Restore button.</summary>
-        protected global::System.Web.UI.WebControls.GridView gvDeactivated;
     }
 }
