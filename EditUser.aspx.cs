@@ -62,6 +62,7 @@ namespace PitStop
                         while (reader.Read())
                         {
                             ddUser.Items.Add(reader["username"].ToString());
+                            
                         }
                         con.Close();
                     }
@@ -200,6 +201,21 @@ namespace PitStop
                         cmd.Parameters.AddWithValue("@UserId", userToTableId);
 
                         int rows = cmd.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            lblStatus.Text = "Profile updated successfully.";
+
+                     
+                            if (newAvatarPath != null)
+                            {
+                                imgAvatar.ImageUrl = newAvatarPath;
+                            }
+                      
+                        }
+                        else
+                        {
+                            lblStatus.Text = "No changes were made.";
+                        }
                         lblStatus.Text = rows > 0 ? "Profile updated successfully." : "No changes were made.";
                     }
 
@@ -219,68 +235,9 @@ namespace PitStop
             }
         }
 
-        private void ddUser_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-            string selectedUsername = TBUsername.Text;
-            string role = Session["role"] as string;
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                string sqlQuery = "";
-                switch (role)
-                {
-                    case "Admin":
-                        sqlQuery = "SELECT username, password, firstName, lastName, email, phoneNumber, avatarPath FROM Admin WHERE username = @username";
-                        break;
-                    case "Advisor":
-                        sqlQuery = "SELECT username, password, firstName, lastName, email, phoneNumber, avatarPath FROM Advisor WHERE username = @username";
-                        break;
-                    case "Student":
-                        sqlQuery = "SELECT username, password, firstName, lastName, email, phoneNumber, avatarPath FROM Students WHERE username = @username";
-                        break;
-                    default:
-                        lblStatus.Text = "User do not have a Role";
-                        return;
-
-                }
-
-                using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
-                {
-                    cmd.Parameters.AddWithValue("@username", selectedUsername);
-                    try
-                    {
-                        con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                TBUsername.Text = reader["username"].ToString();
-                                TBPassword.Text = reader["password"].ToString();
-                                TBFirstName.Text = reader["firstName"].ToString();
-                                TBLastName.Text = reader["lastName"].ToString();
-                                TBEmailAddress.Text = reader["email"].ToString();
-                                TBPhoneNum.Text = reader["phoneNumber"].ToString();
-                                ddRole.SelectedValue = role;
-
-                                if (reader["avatarPath"] != DBNull.Value)
-                                {
-                                    imgAvatar.ImageUrl = reader["avatarPath"].ToString();
-                                }
-                            }
-                        }
-                        con.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        lblStatus.Text = "Error: " + ex.Message;
-                    }
-                }
+       
 
 
-
-
-            }
-        }
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
@@ -398,7 +355,7 @@ namespace PitStop
                     }
 
                     
-                    SqlCommand cmdFetch = new SqlCommand($"SELECT username, password, firstName, lastName, email, phoneNumber FROM {tableName} WHERE username = @username", con);
+                    SqlCommand cmdFetch = new SqlCommand($"SELECT username, password, firstName, lastName, email, phoneNumber, avatarPath FROM {tableName} WHERE username = @username", con);
                     cmdFetch.Parameters.AddWithValue("@username", selectedUsername);
 
                     using (SqlDataReader reader = cmdFetch.ExecuteReader())
@@ -416,6 +373,17 @@ namespace PitStop
                             if (ddRole.Items.FindByValue(givenRole) != null)
                             {
                                 ddRole.SelectedValue = givenRole;
+                            }
+
+
+
+                            if (reader["avatarPath"] != DBNull.Value && !string.IsNullOrEmpty(reader["avatarPath"].ToString()))
+                            {
+                                imgAvatar.ImageUrl = reader["avatarPath"].ToString();
+                            }
+                            else
+                            {
+                                imgAvatar.ImageUrl = "";
                             }
                         }
                     }

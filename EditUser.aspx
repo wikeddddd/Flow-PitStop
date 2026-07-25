@@ -18,7 +18,14 @@
         <div class="form-group">
             <label>Update Profile Picture</label>
             <asp:FileUpload ID="fileUploadAvatar" runat="server" />
-            <asp:RegularExpressionValidator ID="validateAvatar" runat="server" ErrorMessage="Please upload a valid image file (JPEG, PNG, GIF)" ValidationExpression="\.jpeg|\.jpg|\.png|\.gif$" ControlToValidate="fileUploadAvatar" ValidationGroup="Profile"></asp:RegularExpressionValidator>
+                        <asp:RegularExpressionValidator 
+    ID="validateAvatar" 
+    runat="server" 
+    ErrorMessage="Please upload a valid image file (JPEG, PNG, GIF)" 
+    ValidationExpression="^.*(?i:\.jpe?g|\.png|\.gif)$" 
+    ControlToValidate="fileUploadAvatar" 
+    ValidationGroup="Profile">
+</asp:RegularExpressionValidator>
 
              <br />
 
