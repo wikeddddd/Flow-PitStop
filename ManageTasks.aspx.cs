@@ -44,8 +44,8 @@ namespace PitStop
             if (!Page.IsValid) return;
 
             string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = "INSERT INTO Tasks (Id, title, description, xpReward, dueDate, status) " +
-                           "VALUES (@Id, @title, @description, @xpReward, @dueDate, @status)";
+            string query = "INSERT INTO Tasks (StudentId, title, description, xpReward, dueDate, status, AdvisorId) " +
+                           "VALUES (@Id, @title, @description, @xpReward, @dueDate, @status, @advisorId)";
 
             try
             {
@@ -58,6 +58,8 @@ namespace PitStop
                     command.Parameters.AddWithValue("@xpReward", int.Parse(txtXPReward.Text));
                     command.Parameters.AddWithValue("@dueDate", DateTime.Parse(txtDueDate.Text));
                     command.Parameters.AddWithValue("@status", "Pending");
+                    command.Parameters.AddWithValue("@advisorId", Session["LoggedInUserID"]);
+
 
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -121,10 +123,10 @@ namespace PitStop
         private void BindTasks()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = @"SELECT t.TaskId, t.Id AS StudentId, t.title, t.description, t.xpReward, t.dueDate, t.status,
+            string query = @"SELECT t.TaskId, t.StudentId, t.title, t.description, t.xpReward, t.dueDate, t.status, t.AdvisorId,
                              (st.firstName + ' ' + st.lastName) AS StudentName
                              FROM Tasks t
-                             JOIN Students st ON t.Id = st.Id";
+                             JOIN Students st ON t.StudentId = st.StudentId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

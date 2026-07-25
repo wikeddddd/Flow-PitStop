@@ -94,19 +94,23 @@ namespace PitStop
                     // Determine table
                     //---------------------------------------------------------
                     string tableName = "";
+                    string ID = string.Empty;
 
                     switch (type)
                     {
                         case "admin":
                             tableName = "Admin";
+                            ID = "Id";
                             break;
 
                         case "student":
                             tableName = "Students";
+                            ID = "StudentId";
                             break;
 
                         case "advisor":
                             tableName = "Advisors";
+                            ID = "AdvisorId";
                             break;
 
                         default:
@@ -120,7 +124,7 @@ namespace PitStop
                     // Get User Details
                     //---------------------------------------------------------
                     SqlCommand userCmd = new SqlCommand(
-                        $"SELECT Id, username FROM {tableName} WHERE email=@Email", con);
+                        $"SELECT {ID}, username FROM {tableName} WHERE email=@Email", con);
 
                     userCmd.Parameters.AddWithValue("@Email", email);
 
@@ -132,7 +136,7 @@ namespace PitStop
                         if (drUser.Read())
                         {
                             username = drUser["username"].ToString();
-                            loginID = drUser["Id"].ToString();
+                            loginID = drUser[ID].ToString();
                         }
                         else
                         {

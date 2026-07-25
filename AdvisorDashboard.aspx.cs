@@ -41,7 +41,7 @@ namespace PitStop
 
                 // Last 5 registered students
                 SqlCommand cmdStudents = new SqlCommand(
-                    "SELECT TOP 5 username, firstName, lastName, email FROM Students ORDER BY Id DESC", con);
+                    "SELECT TOP 5 username, firstName, lastName, email FROM Students ORDER BY StudentId DESC", con);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmdStudents);
                 DataTable dt = new DataTable();
