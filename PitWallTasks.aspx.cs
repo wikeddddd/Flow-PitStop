@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.IO;
 
 namespace PitStop
 {
@@ -117,6 +118,9 @@ namespace PitStop
             try
             {
                 int targetTaskId = Convert.ToInt32(ddlPendingTasks.SelectedValue);
+                string checkQuery = @"SELECT COUNT(*) 
+                          FROM Tasks
+                          WHERE StudentId = @StudentId AND TaskId = @TaskId";
 
                 string uploadPath = Server.MapPath("~/Uploads/");
                 if (!Directory.Exists(uploadPath))
@@ -124,24 +128,53 @@ namespace PitStop
                     Directory.CreateDirectory(uploadPath);
                 }
 
-                string fileName = Guid.NewGuid().ToString().Substring(0,8) + "_" + Path.GetFileName(fileTaskUpload.FileName);
+                string fileName = Guid.NewGuid().ToString().Substring(0, 8) + "_" + Path.GetFileName(fileTaskUpload.FileName);
                 string filePath = Path.Combine(uploadPath, fileName);
                 fileTaskUpload.SaveAs(filePath);
-                
+
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    string sqlQuery = "UPDATE Tasks SET status = 'Submitted', filePath = @filePath WHERE TaskId = @taskId";
-                    using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
                     {
-                        cmd.Parameters.AddWithValue("@taskId", targetTaskId);
-                        cmd.Parameters.AddWithValue("@filePath", filePath);
+                        int studentId = Convert.ToInt32(Session["LoggedInUserId"]);
+                        checkCmd.Parameters.AddWithValue("@StudentId", studentId);
+                        checkCmd.Parameters.AddWithValue("@TaskId", targetTaskId);
                         con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+                        int existingCount = (int)checkCmd.ExecuteScalar();
+                        
+
+                        if (existingCount > 0)
+                        {
+                            // Block duplicate submission
+                            lblStatus.Text = "You have already submitted a document for this task!";
+                            lblStatus.CssClass = "feedback-msg error";
+                            return; // Stop execution
+                        }
+                        else
+                        {
+                            if (!Directory.Exists(uploadPath))
+                            {
+                                Directory.CreateDirectory(uploadPath);
+                            }
+
+                            fileTaskUpload.SaveAs(filePath);
+
+                            string sqlQuery = "UPDATE Tasks SET status = 'Submitted', filePath = @filePath WHERE TaskId = @taskId";
+                            using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
+                            {
+                                cmd.Parameters.AddWithValue("@taskId", targetTaskId);
+                                cmd.Parameters.AddWithValue("@filePath", filePath);
+                                con.Open();
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                            }
+                            lblStatus.Text = "Task submitted successfully!";
+                        }
                     }
+
+                    refreshPage();
+                    con.Close();
                 }
-                lblStatus.Text = "Task submitted successfully!";
-                refreshPage();
             }
             catch (SqlException ex)
             {
