@@ -26,7 +26,7 @@
         <div class="form-group">
             <asp:Label ID="Label1" runat="server" Text="Choose a User :"></asp:Label>
 
-             <asp:DropDownList ID="ddUser" runat="server" OnSelectedIndexChanged="ddUser_SelectedIndexChanged1">
+             <asp:DropDownList ID="ddUser" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddUser_SelectedIndexChanged1">
             </asp:DropDownList>
         </div>
          <div class="form-group">
@@ -65,9 +65,9 @@
         <div class="form-group"> 
             <asp:Label ID="Label2" runat="server" Text="Role"></asp:Label>
             <asp:DropDownList ID="ddRole" runat="server">
-                <asp:ListItem>admin</asp:ListItem>
-                <asp:ListItem>advisor</asp:ListItem>
-                <asp:ListItem Value="student"></asp:ListItem>
+                <asp:ListItem Value="Admin">Admin</asp:ListItem>
+                <asp:ListItem Value="Advisor">Advisor</asp:ListItem>
+                <asp:ListItem Value="Student">Student</asp:ListItem>
             </asp:DropDownList>
         </div>
         <div>

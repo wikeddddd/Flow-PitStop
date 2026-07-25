@@ -19,42 +19,36 @@ namespace PitStop
             }
             if (!IsPostBack) {
                 BindLeaderboardStandings();
-                ddStudentID.Items.Clear();
-                ddSchoolName.Items.Clear();
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
-                {
-                    con.Open();
-                    string query1 = "SELECT Id FROM Gamification";
-                    using (SqlCommand cmd = new SqlCommand(query1, con))
-                    {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                while (reader.Read())
-                                {
-                                    ddStudentID.Items.Add(reader["Id"].ToString());
-                                }
-                            }
-                        
-                        }
+                BindDropdowns();
+            }
+        }
 
-                    }
-                    string query2 = "SELECT DISTINCT schoolName FROM Students";
-                    using (SqlCommand cmd = new SqlCommand(query2, con))
+        private void BindDropdowns()
+        {
+            ddStudentID.Items.Clear();
+            ddSchoolName.Items.Clear();
+            ddStudentID.Items.Add(new ListItem("-- All --", ""));
+            ddSchoolName.Items.Add(new ListItem("-- All --", ""));
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+            {
+                con.Open();
+                string query1 = "SELECT Id FROM Gamification";
+                using (SqlCommand cmd = new SqlCommand(query1, con))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                while (reader.Read())
-                                {
-                                    ddSchoolName.Items.Add(reader["schoolName"].ToString());
-                                }
-                            }
-                        }
+                        while (reader.Read())
+                            ddStudentID.Items.Add(reader["Id"].ToString());
                     }
-                    con.Close();
+                }
+                string query2 = "SELECT DISTINCT schoolName FROM Students WHERE schoolName IS NOT NULL AND schoolName <> ''";
+                using (SqlCommand cmd = new SqlCommand(query2, con))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            ddSchoolName.Items.Add(reader["schoolName"].ToString());
+                    }
                 }
             }
         }
@@ -63,7 +57,11 @@ namespace PitStop
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
             {
-                string sqlQuery = "SELECT TOP 10 s.Id, s.Name, g.totalXp, g.currentLevel, g.dailyStreak FROM Students s INNER JOIN Gamification g ON s.Id = g.Id ORDER BY g.totalXp DESC";
+                string sqlQuery = @"SELECT TOP 10 s.Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
+                                           g.totalXp AS TotalXp, g.currentLevel AS CurrentLevel, g.dailyStreak AS DailyStreak 
+                                    FROM Students s 
+                                    INNER JOIN Gamification g ON s.Id = g.Id 
+                                    ORDER BY g.totalXp DESC";
                 using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                 {
                     try
@@ -79,7 +77,8 @@ namespace PitStop
                     }
                     catch (Exception ex)
                     {
-
+                        lblError.Text = "Error loading leaderboard: " + ex.Message;
+                        lblError.Visible = true;
                     }
                 }
             }
@@ -117,106 +116,172 @@ namespace PitStop
 
         protected void ddStudentID_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddSchoolName.SelectedItem != null)
-            {
-                string selectedSchoolName = ddSchoolName.SelectedItem.Text;
-                string selectedStudentID = ddStudentID.SelectedItem.Text;
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
-                {
-                    try
-                    {
-                        con.Open();
-                        string query = "SELECT s.Id, s.Name, g.totalXp, g.currentLevel, g.dailyStreak FROM Students s INNER JOIN Gamification g ON s.Id = g.Id WHERE s.schoolName = @schoolName,s.Id = @studentID ORDER BY g.totalXp DESC";
-                        using (SqlCommand cmd = new SqlCommand(query, con))
-                        {
-                            cmd.Parameters.AddWithValue("@schoolName", selectedSchoolName);
-                            cmd.Parameters.AddWithValue("@studentID", selectedStudentID);
-                            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                            {
-                                System.Data.DataTable dt = new System.Data.DataTable();
-                                adapter.Fill(dt);
-                                gvLeaderboard.DataSource = dt;
-                                gvLeaderboard.DataBind();
-                            }
-                        }
-                        con.Close();
-                    } catch 
-                    {
-                        lblError.Text = "An error occurred while fetching data. Please try again.";
-                        lblError.Visible = true;
-                    }
+            string selectedStudentID = ddStudentID.SelectedValue;
 
-                }
-            }
-            else
+            // Reset the other dropdown
+            ddSchoolName.SelectedIndex = 0;
+
+            if (string.IsNullOrEmpty(selectedStudentID))
             {
-                string selectedStudentID = ddStudentID.SelectedItem.Text;
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+                BindLeaderboardStandings();
+                return;
+            }
+
+            string query = @"SELECT s.Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
+                                     g.totalXp AS TotalXp, g.currentLevel AS CurrentLevel, g.dailyStreak AS DailyStreak 
+                              FROM Students s INNER JOIN Gamification g ON s.Id = g.Id 
+                              WHERE s.Id = @studentID 
+                              ORDER BY g.totalXp DESC";
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+            {
+                try
                 {
                     con.Open();
-                    string query = "SELECT * FROM Gamification WHERE Id = @studentID";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@studentID", selectedStudentID);
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                        {
-                            System.Data.DataTable dt = new System.Data.DataTable();
-                            adapter.Fill(dt);
-                            gvLeaderboard.DataSource = dt;
-                            gvLeaderboard.DataBind();
-                        }
+                        BindGrid(cmd);
                     }
-                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    lblError.Text = "Error filtering by student: " + ex.Message;
+                    lblError.Visible = true;
                 }
             }
         }
 
         protected void ddSchoolName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddStudentID.SelectedItem != null)
+            string selectedSchoolName = ddSchoolName.SelectedValue;
+
+            // Reset the other dropdown
+            ddStudentID.SelectedIndex = 0;
+
+            if (string.IsNullOrEmpty(selectedSchoolName))
             {
-                string selectedSchoolName = ddSchoolName.SelectedItem.Text;
-                string selectedStudentID = ddStudentID.SelectedItem.Text;
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
-                {
-                    con.Open();
-                    string query = "SELECT s.Id, s.Name, g.totalXp, g.currentLevel, g.dailyStreak FROM Students s INNER JOIN Gamification g ON s.Id = g.Id WHERE s.schoolName = @schoolName AND s.Id = @studentID ORDER BY g.totalXp DESC"; ;
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@schoolName", selectedSchoolName);
-                        cmd.Parameters.AddWithValue("@studentID", selectedStudentID);
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                        {
-                            System.Data.DataTable dt = new System.Data.DataTable();
-                            adapter.Fill(dt);
-                            gvLeaderboard.DataSource = dt;
-                            gvLeaderboard.DataBind();
-                        }
-                    }
-                    con.Close();
-                }
+                BindLeaderboardStandings();
+                return;
             }
-            else
+
+            string query = @"SELECT s.Id, s.firstName AS FirstName, s.schoolName AS SchoolName, 
+                                     g.totalXp AS TotalXp, g.currentLevel AS CurrentLevel, g.dailyStreak AS DailyStreak 
+                              FROM Students s INNER JOIN Gamification g ON s.Id = g.Id 
+                              WHERE s.schoolName = @schoolName 
+                              ORDER BY g.totalXp DESC";
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
             {
-                string selectedSchoolName = ddSchoolName.SelectedItem.Text;
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+                try
                 {
                     con.Open();
-                    string query = "SELECT s.Id, s.Name, g.totalXp, g.currentLevel, g.dailyStreak FROM Students s INNER JOIN Gamification g ON s.Id = g.Id WHERE s.schoolName = @schoolName ORDER BY g.totalXp DESC"; ;
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@schoolName", selectedSchoolName);
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                        {
-                            System.Data.DataTable dt = new System.Data.DataTable();
-                            adapter.Fill(dt);
-                            gvLeaderboard.DataSource = dt;
-                            gvLeaderboard.DataBind();
-                        }
+                        BindGrid(cmd);
                     }
-                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    lblError.Text = "Error filtering by school: " + ex.Message;
+                    lblError.Visible = true;
                 }
             }
         }
+
+        private void BindGrid(SqlCommand cmd)
+        {
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                System.Data.DataTable dt = new System.Data.DataTable();
+                adapter.Fill(dt);
+                gvLeaderboard.DataSource = dt;
+                gvLeaderboard.DataBind();
+            }
+        }
+
+        protected void gvLeaderboard_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            gvLeaderboard.EditIndex = e.NewEditIndex;
+            BindLeaderboardStandings();
+        }
+
+        protected void gvLeaderboard_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gvLeaderboard.EditIndex = -1;
+            BindLeaderboardStandings();
+        }
+
+        protected void gvLeaderboard_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int id = Convert.ToInt32(gvLeaderboard.DataKeys[e.RowIndex].Value);
+            GridViewRow row = gvLeaderboard.Rows[e.RowIndex];
+
+            string firstName   = ((TextBox)row.FindControl("txtFirstName")).Text.Trim();
+            string schoolName  = ((TextBox)row.FindControl("txtSchoolName")).Text.Trim();
+            string totalXp     = ((TextBox)row.FindControl("txtTotalXp")).Text.Trim();
+            string currentLevel= ((TextBox)row.FindControl("txtCurrentLevel")).Text.Trim();
+            string dailyStreak = ((TextBox)row.FindControl("txtDailyStreak")).Text.Trim();
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+                {
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand(
+                        "UPDATE Students SET firstName=@FirstName, schoolName=@SchoolName WHERE Id=@Id; " +
+                        "UPDATE Gamification SET totalXp=@TotalXp, currentLevel=@CurrentLevel, dailyStreak=@DailyStreak WHERE Id=@Id", con))
+                    {
+                        cmd.Parameters.AddWithValue("@FirstName", firstName);
+                        cmd.Parameters.AddWithValue("@SchoolName", schoolName);
+                        cmd.Parameters.AddWithValue("@TotalXp", totalXp);
+                        cmd.Parameters.AddWithValue("@CurrentLevel", currentLevel);
+                        cmd.Parameters.AddWithValue("@DailyStreak", dailyStreak);
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                gvLeaderboard.EditIndex = -1;
+                BindLeaderboardStandings();
+                BindDropdowns();
+                lblError.Text = "Updated successfully.";
+                lblError.ForeColor = System.Drawing.Color.Green;
+                lblError.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = "Error updating: " + ex.Message;
+                lblError.ForeColor = System.Drawing.Color.Red;
+                lblError.Visible = true;
+            }
+        }
+
+        protected void gvLeaderboard_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            int id = Convert.ToInt32(gvLeaderboard.DataKeys[e.RowIndex].Value);
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+                {
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand(
+                        "DELETE FROM Gamification WHERE Id=@Id; DELETE FROM Students WHERE Id=@Id", con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                BindLeaderboardStandings();
+                BindDropdowns();
+                lblError.Text = "Deleted successfully.";
+                lblError.ForeColor = System.Drawing.Color.Green;
+                lblError.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = "Error deleting: " + ex.Message;
+                lblError.ForeColor = System.Drawing.Color.Red;
+                lblError.Visible = true;
+            }
+        }
     }
-    }
+}

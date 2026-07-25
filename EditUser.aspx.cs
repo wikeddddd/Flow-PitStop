@@ -47,26 +47,24 @@ namespace PitStop
 
             if (!IsPostBack)
             {
-
-            }
-
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("SELECT username FROM Students UNION SELECT username FROM Advisors UNION SELECT username FROM Admin", con);
-                ddUser.Items.Clear();
-                try
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    SqlCommand cmd = new SqlCommand("SELECT username FROM Students UNION SELECT username FROM Advisors UNION SELECT username FROM Admin", con);
+                    ddUser.Items.Clear();
+                    try
                     {
-                        ddUser.Items.Add(reader["username"].ToString());
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ddUser.Items.Add(reader["username"].ToString());
+                        }
+                        con.Close();
                     }
-                    con.Close();
-                }
-                catch (Exception ex)
-                {
-                    lblStatus.Text = "Error: " + ex.Message;
+                    catch (Exception ex)
+                    {
+                        lblStatus.Text = "Error: " + ex.Message;
+                    }
                 }
             }
         }
@@ -83,70 +81,82 @@ namespace PitStop
             string phoneNum = TBPhoneNum.Text.Trim();
             string role = ddRole.SelectedValue;
             string newAvatarPath = null;
-            
-            int userId;
-            int userToTableId;
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmdGetUserId = new SqlCommand("SELECT Id FROM UserPitStop WHERE username = @username", con);
-                cmdGetUserId.Parameters.AddWithValue("@username", username);
-                con.Open();
-                userId = Convert.ToInt32(cmdGetUserId.ExecuteScalar());
-                con.Close();
 
-                SqlCommand cmdGetTableName = new SqlCommand("SELECT role FROM UserPitStop WHERE username = @username", con);
-                cmdGetTableName.Parameters.AddWithValue("@username", username);
-                con.Open();
-                string roleTable = cmdGetTableName.ExecuteScalar().ToString();
-                con.Close();
-
-                switch (roleTable)
-                {
-                    case "Admin":
-                        roleTable = "Admin";
-                        break;
-                    case "Student":
-                        roleTable = "Students";
-                        break;
-                    case "Advisor":
-                        roleTable = "Advisors";
-                        break;
-                    default:
-                        lblStatus.Text = "User does not have a valid role.";
-                        return;
-                }
-                SqlCommand cmdGetUserToTableId = new SqlCommand($"SELECT Id FROM {roleTable} WHERE username = @username", con);
-                cmdGetUserToTableId.Parameters.AddWithValue("@username", username);
-                con.Open();
-                userToTableId = Convert.ToInt32(cmdGetUserToTableId.ExecuteScalar());
-                con.Close();
-            }
-
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phoneNum))
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phoneNum))
             {
                 lblStatus.Text = "Please fill in all required fields.";
                 return;
             }
 
+            // ── resolve IDs ──────────────────────────────────────────────
+            int userId = 0;
+            int userToTableId = 0;
+            string roleTable = "";
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    SqlCommand cmdGetUserId = new SqlCommand("SELECT Id FROM UserPitStop WHERE username = @username", con);
+                    cmdGetUserId.Parameters.AddWithValue("@username", username);
+                    object userIdObj = cmdGetUserId.ExecuteScalar();
+                    if (userIdObj != null) userId = Convert.ToInt32(userIdObj);
+
+                    SqlCommand cmdGetRole = new SqlCommand("SELECT role FROM UserPitStop WHERE username = @username", con);
+                    cmdGetRole.Parameters.AddWithValue("@username", username);
+                    object roleObj = cmdGetRole.ExecuteScalar();
+                    if (roleObj != null) roleTable = roleObj.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                lblStatus.Text = "Error resolving user: " + ex.Message;
+                return;
+            }
+
+            string tableForRole = "";
+            switch (roleTable)
+            {
+                case "Admin":    tableForRole = "Admin";    break;
+                case "Student":  tableForRole = "Students"; break;
+                case "Advisor":  tableForRole = "Advisors"; break;
+                default:
+                    lblStatus.Text = "User does not have a valid role.";
+                    return;
+            }
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    SqlCommand cmdGetTableId = new SqlCommand($"SELECT Id FROM {tableForRole} WHERE username = @username", con);
+                    cmdGetTableId.Parameters.AddWithValue("@username", username);
+                    object tableIdObj = cmdGetTableId.ExecuteScalar();
+                    if (tableIdObj != null) userToTableId = Convert.ToInt32(tableIdObj);
+                }
+            }
+            catch (Exception ex)
+            {
+                lblStatus.Text = "Error resolving role table ID: " + ex.Message;
+                return;
+            }
+
+            // ── avatar upload ─────────────────────────────────────────────
             try
             {
                 if (fileUploadAvatar.HasFile)
                 {
                     string folderPath = Server.MapPath("~/Uploads/Avatars/");
+                    if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
-                    if (!Directory.Exists(folderPath))
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-
-
-
-                    string extension = Path.GetExtension(fileUploadAvatar.FileName);
+                    string extension = Path.GetExtension(fileUploadAvatar.FileName).ToLower();
                     if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
                     {
                         string fileName = "avatar_" + userId + "_" + Guid.NewGuid().ToString().Substring(0, 8) + extension;
-                        string savePath = Path.Combine(folderPath, fileName);
-                        fileUploadAvatar.SaveAs(savePath);
+                        fileUploadAvatar.SaveAs(Path.Combine(folderPath, fileName));
                         newAvatarPath = "~/Uploads/Avatars/" + fileName;
                     }
                     else
@@ -154,169 +164,53 @@ namespace PitStop
                         lblStatus.Text = "Invalid file type. Please upload an image file.";
                         return;
                     }
-
                 }
-
             }
             catch (Exception ex)
             {
-                lblStatus.Text = "Error: " + ex.Message;
+                lblStatus.Text = "Error uploading avatar: " + ex.Message;
+                return;
             }
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            // ── update role table ─────────────────────────────────────────
+            try
             {
-                SqlCommand cmdChecker = new SqlCommand("SELECT COUNT(*) FROM UserPitStop WHERE username = @username", con);
-                cmdChecker.Parameters.AddWithValue("@username", username);
-                int count = Convert.ToInt32(cmdChecker.ExecuteScalar());
-
-                if (count == 0)
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    SqlCommand cmdInsertUserPitStop = new SqlCommand("INSERT INTO UserPitStop (username,email,password, role) VALUES (@username, @email, @password, @role)", con);
-                    cmdInsertUserPitStop.Parameters.AddWithValue("@username", username);
-                    cmdInsertUserPitStop.Parameters.AddWithValue("@email", email);
-                    cmdInsertUserPitStop.Parameters.AddWithValue("@password", password);
-                    cmdInsertUserPitStop.Parameters.AddWithValue("@role", role);
+                    con.Open();
 
-                    SqlCommand cmdInsertRole = new SqlCommand();
+                    string sqlQuery = newAvatarPath != null
+                        ? $"UPDATE {tableForRole} SET username=@Username, password=@Password, firstName=@FirstName, lastName=@LastName, email=@Email, phoneNumber=@PhoneNum, avatarPath=@AvatarPath WHERE Id=@UserId"
+                        : $"UPDATE {tableForRole} SET username=@Username, password=@Password, firstName=@FirstName, lastName=@LastName, email=@Email, phoneNumber=@PhoneNum WHERE Id=@UserId";
 
-                    
-
-                    if (newAvatarPath != null)
+                    using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                     {
-                        string TablesA = "";
-                        switch (role)
-                        {
-                            case "Admin":
-                                TablesA = "Admin";
-                                break;
-                            case "Student":
-                                TablesA = "Students";
-                                break;
-                            case "Advisor":
-                                TablesA = "Advisors";
-                                break;
-                        }
-                        cmdInsertRole = new SqlCommand($"INSERT INTO {TablesA} (username, password, firstName,lastName,email,phoneNumber,avatarPath) VALUES (@username, @password, @firstName, @lastName, @email, @phoneNumber, @avatarPath)", con);
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@Password", password);
+                        cmd.Parameters.AddWithValue("@FirstName", firstName);
+                        cmd.Parameters.AddWithValue("@LastName", lastName);
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@PhoneNum", phoneNum);
+                        if (newAvatarPath != null) cmd.Parameters.AddWithValue("@AvatarPath", newAvatarPath);
+                        cmd.Parameters.AddWithValue("@UserId", userToTableId);
 
-                        cmdInsertRole.Parameters.AddWithValue("@username", username);
-                        cmdInsertRole.Parameters.AddWithValue("@password", password);
-                        cmdInsertRole.Parameters.AddWithValue("@firstName", firstName);
-                        cmdInsertRole.Parameters.AddWithValue("@lastName", lastName);
-                        cmdInsertRole.Parameters.AddWithValue("@email", email);
-                        cmdInsertRole.Parameters.AddWithValue("@phoneNumber", phoneNum);
-                        cmdInsertRole.Parameters.AddWithValue("@avatarPath", newAvatarPath);
-                    }
-                    else
-                    {
-                        string TablesA = "";
-                        switch (role)
-                        {
-                            case "Admin":
-                                TablesA = "Admin";
-                                break;
-                            case "Student":
-                                TablesA = "Students";
-                                break;
-                            case "Advisor":
-                                TablesA = "Advisors";
-                                break;
-                        }
-                        cmdInsertRole = new SqlCommand($"INSERT INTO {TablesA} (username, password, firstName, lastName, email, phoneNumber, avatarPath) VALUES (@username, @password, @firstName, @lastName, @email, @phoneNumber)", con);
-
-                        cmdInsertRole.Parameters.AddWithValue("@username", username);
-                        cmdInsertRole.Parameters.AddWithValue("@password", password);
-                        cmdInsertRole.Parameters.AddWithValue("@firstName", firstName);
-                        cmdInsertRole.Parameters.AddWithValue("@lastName", lastName);
-                        cmdInsertRole.Parameters.AddWithValue("@email", email);
-                        cmdInsertRole.Parameters.AddWithValue("@phoneNumber", phoneNum);
+                        int rows = cmd.ExecuteNonQuery();
+                        lblStatus.Text = rows > 0 ? "Profile updated successfully." : "No changes were made.";
                     }
 
-                    try
+                    // also sync email/password in UserPitStop
+                    using (SqlCommand cmdSync = new SqlCommand("UPDATE UserPitStop SET email=@Email, password=@Password WHERE Id=@UserId", con))
                     {
-                        con.Open();
-                        cmdInsertUserPitStop.ExecuteNonQuery();
-                        cmdInsertRole.ExecuteNonQuery();
-                        con.Close();
-                        lblStatus.Text = "New User created successfully.";
-                        if (role == "Student")
-                        {
-                            SqlCommand getID = new SqlCommand("SELECT Id FROM Students WHERE username = @username", con);
-                            getID.Parameters.AddWithValue("@username", username);
-                            int id = Convert.ToInt32(getID.ExecuteScalar());
-                            SqlCommand cmdGame = new SqlCommand("INSERT INTO Gamification (Id) VALUES (@Id)", con);
-                            cmdGame.Parameters.AddWithValue("@Id", id);
-                            con.Open();
-                            cmdGame.ExecuteNonQuery();
-                            con.Close();
-                        }
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        lblStatus.Text = "Error: User cannot be created.\n" + ex.Message;
-                    }
-
-
-
-                }
-
-                string sqlQuery;
-                string TablesB= "";
-                switch (role)
-                {
-                    case "Admin":
-                        TablesB = "Admin";
-                        break;
-                    case "Student":
-                        TablesB = "Students";
-                        break;
-                    case "Advisor":
-                        TablesB = "Advisors";
-                        break;
-                }
-                if (newAvatarPath != null)
-                {
-                    sqlQuery = $"UPDATE {TablesB} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum, avatarPath = @AvatarPath WHERE Id = @StudentId";
-                }
-                else
-                {
-                    sqlQuery = $"UPDATE {TablesB} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum WHERE Id = @StudentId";
-                }
-                using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
-                {
-                    cmd.Parameters.AddWithValue("@Username", username);
-                    cmd.Parameters.AddWithValue("@Password", password);
-                    cmd.Parameters.AddWithValue("@FirstName", firstName);
-                    cmd.Parameters.AddWithValue("@LastName", lastName);
-                    cmd.Parameters.AddWithValue("@Email", email);
-                    cmd.Parameters.AddWithValue("@PhoneNum", phoneNum);
-                    if (newAvatarPath != null)
-                    {
-                        cmd.Parameters.AddWithValue("@AvatarPath", newAvatarPath);
-                    }
-                    cmd.Parameters.AddWithValue("@StudentId", userToTableId);
-                    try
-                    {
-                        con.Open();
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
-                        {
-                            lblStatus.Text = "Profile updated successfully.";
-                        }
-                        else
-                        {
-                            lblStatus.Text = "No changes were made.";
-                        }
-                        con.Close();
-                        lblStatus.Text = "Profile updated successfully.";
-
-                    }
-                    catch (Exception ex)
-                    {
-                        lblStatus.Text = "Error: " + ex.Message;
+                        cmdSync.Parameters.AddWithValue("@Email", email);
+                        cmdSync.Parameters.AddWithValue("@Password", password);
+                        cmdSync.Parameters.AddWithValue("@UserId", userId);
+                        cmdSync.ExecuteNonQuery();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                lblStatus.Text = "Error saving profile: " + ex.Message;
             }
         }
 

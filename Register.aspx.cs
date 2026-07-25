@@ -173,9 +173,9 @@ namespace PitStop
 
                     SqlCommand cmdUser = new SqlCommand(
                         @"INSERT INTO UserPitStop
-                (username,password,email,role)
-                VALUES
-                (@Username,@Password,@Email,@UserType)", con);
+                    (username,password,email,role)
+                    VALUES
+                    (@Username,@Password,@Email,@UserType)", con);
 
                     cmdUser.Parameters.AddWithValue("@Username", txtUsername.Text.Trim());
                     cmdUser.Parameters.AddWithValue("@Password", txtPassword.Text);
@@ -197,14 +197,11 @@ namespace PitStop
                             break;
 
                         case "advisor":
-                            tableName = "Advisor";
+                            tableName = "Advisors";
                             break;
 
                         case "student":
                             tableName = "Students";
-                            SqlCommand cmdGame = new SqlCommand("INSERT INTO Gamification (Id) VALUES (@Id)", con);
-                            cmdGame.Parameters.AddWithValue("@Id", txtUsername.Text.Trim());
-                            cmdGame.ExecuteNonQuery();
                             break;
 
                         default:
@@ -222,6 +219,21 @@ namespace PitStop
                     cmdRole.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
 
                     cmdRole.ExecuteNonQuery();
+
+                    if (ddlRole.SelectedValue.ToLower() == "student")
+                    {
+                        // =============================
+                        // Insert into Gamification
+                        // =============================
+                        SqlCommand getStudentIdCmd = new SqlCommand("SELECT Id FROM Students WHERE username=@Username", con);
+                        getStudentIdCmd.Parameters.AddWithValue("@Username", txtUsername.Text.Trim());
+                        int newID = Convert.ToInt32(getStudentIdCmd.ExecuteScalar());
+                        SqlCommand cmdGamification = new SqlCommand("INSERT INTO Gamification (Id) VALUES (@Id)", con);
+                        cmdGamification.Parameters.AddWithValue("@Id", newID);
+
+                        cmdGamification.ExecuteNonQuery();
+                    }
+                con.Close();
                 }
 
                 // =============================
@@ -236,6 +248,11 @@ namespace PitStop
                 lblRegisterError.ForeColor = System.Drawing.Color.Red;
                 lblRegisterError.Text = ex.Message;
             }
+        }
+
+        protected void txtUsername_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

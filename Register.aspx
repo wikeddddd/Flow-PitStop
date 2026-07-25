@@ -10,7 +10,7 @@
 
             <div class="form-group">
                 <label for="txtUsername">Username</label>
-                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-input"></asp:TextBox>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-input" OnTextChanged="txtUsername_TextChanged"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="rfvUsername" runat="server"
                     ControlToValidate="txtUsername"
                     ErrorMessage="Username is required"
@@ -57,7 +57,7 @@
                 <label for="ddlRole">I am a...</label>
                 <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-input" OnSelectedIndexChanged="ddlRole_SelectedIndexChanged">
                     <asp:ListItem Text="Student" Value="Student"></asp:ListItem>
-                    <asp:ListItem Text="Advisor" Value="Admin"></asp:ListItem>
+                    <asp:ListItem Text="Advisor" Value="Advisor"></asp:ListItem>
                 </asp:DropDownList>
             </div>
 
