@@ -58,7 +58,7 @@ namespace PitStop
                 }
 
                 using (SqlConnection con = new SqlConnection(
-                    ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+                    ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
                 {
                     con.Open();
 

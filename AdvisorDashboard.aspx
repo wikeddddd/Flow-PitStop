@@ -7,6 +7,31 @@
 
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
     <uc:AdvisorNav runat="server" />
-    <h3>Welcome back</h3>
-    <p>Use the tabs above to manage tasks and students.</p>
+
+    <header class="dashboard-header">
+        <div class="user-profile-tag">
+            Welcome back, <strong><asp:Label ID="lblAdvisorName" runat="server" Text="Advisor"></asp:Label></strong>
+        </div>
+    </header>
+
+    <div class="advisor-card">
+        <h3>Team Overview</h3>
+        <p>Total students: <strong><asp:Label ID="lblStudentCount" runat="server" Text="0"></asp:Label></strong></p>
+    </div>
+
+    <div class="advisor-card">
+        <h3>Recently Registered Students</h3>
+        <asp:GridView ID="gvRecentStudents" runat="server"
+            AutoGenerateColumns="false"
+            CssClass="table-data"
+            GridLines="None">
+            <Columns>
+                <asp:BoundField DataField="username"  HeaderText="Username" />
+                <asp:BoundField DataField="firstName" HeaderText="First Name" />
+                <asp:BoundField DataField="lastName"  HeaderText="Last Name" />
+                <asp:BoundField DataField="email"     HeaderText="Email" />
+            </Columns>
+            <EmptyDataTemplate>No students registered yet.</EmptyDataTemplate>
+        </asp:GridView>
+    </div>
 </asp:Content>

@@ -9,9 +9,15 @@
 
 namespace PitStop
 {
-
-
     public partial class AdvisorDashboard
     {
+        /// <summary>Displays the logged-in advisor's username.</summary>
+        protected global::System.Web.UI.WebControls.Label lblAdvisorName;
+
+        /// <summary>Displays the total number of registered students.</summary>
+        protected global::System.Web.UI.WebControls.Label lblStudentCount;
+
+        /// <summary>Shows the 5 most recently registered students.</summary>
+        protected global::System.Web.UI.WebControls.GridView gvRecentStudents;
     }
 }
