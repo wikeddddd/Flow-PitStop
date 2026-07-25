@@ -69,11 +69,14 @@
   <ItemGroup>
     <Content Include="Admin\Dashboard.aspx" />
     <Content Include="AdvisorDashboard.aspx" />
+    <Content Include="AdvisorNav.ascx" />
     <Content Include="Content\member.css" />
     <Content Include="Content\site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="EditUser.aspx" />
+    <Content Include="ManageStudents.aspx" />
+    <Content Include="ManageTasks.aspx" />
     <Content Include="ManageUserProfile.aspx" />
     <Content Include="PitStopStudent.mdf" />
     <Content Include="PitStopStudent_log.ldf">
@@ -103,6 +106,13 @@
     <Compile Include="AdvisorDashboard.aspx.designer.cs">
       <DependentUpon>AdvisorDashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AdvisorNav.ascx.cs">
+      <DependentUpon>AdvisorNav.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdvisorNav.ascx.designer.cs">
+      <DependentUpon>AdvisorNav.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -123,6 +133,20 @@
     </Compile>
     <Compile Include="EditUser.aspx.designer.cs">
       <DependentUpon>EditUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageStudents.aspx.cs">
+      <DependentUpon>ManageStudents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageStudents.aspx.designer.cs">
+      <DependentUpon>ManageStudents.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageTasks.aspx.cs">
+      <DependentUpon>ManageTasks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageTasks.aspx.designer.cs">
+      <DependentUpon>ManageTasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="ManageUserProfile.aspx.cs">
       <DependentUpon>ManageUserProfile.aspx</DependentUpon>
