@@ -97,19 +97,82 @@ namespace PitStop
 
             int taskId = int.Parse(hfSelectedTaskId.Value);
             string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            string query = "UPDATE Tasks SET status = 'Approved' WHERE TaskId = @TaskId";
+
+            // 1. First, check if the task is already approved so XP isn't awarded twice
+            string selectQuery = "SELECT StudentId, xpReward, status FROM Tasks WHERE TaskId = @TaskId";
+
+            // 2. Update task status
+            string updateTaskQuery = "UPDATE Tasks SET status = 'Approved' WHERE TaskId = @TaskId";
+
+            // 3. Increment student's total XP (adjust TotalXP to match your column name in Students table)
+            string updateStudentXpQuery = "UPDATE Gamification SET totalXp = ISNULL(totalXp, 0) + @XpReward WHERE Id = @StudentId";
 
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@TaskId", taskId);
                     connection.Open();
-                    command.ExecuteNonQuery();
+
+                    int studentId = 0;
+                    int xpReward = 0;
+                    string currentStatus = "";
+
+                    // Fetch Task Details
+                    using (SqlCommand selectCmd = new SqlCommand(selectQuery, connection))
+                    {
+                        selectCmd.Parameters.AddWithValue("@TaskId", taskId);
+                        using (SqlDataReader reader = selectCmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                studentId = Convert.ToInt32(reader["StudentId"]);
+                                xpReward = Convert.ToInt32(reader["xpReward"]);
+                                currentStatus = reader["status"].ToString();
+                            }
+                        }
+                    }
+
+                    // Guard clause: Prevent re-approving and duplicating XP rewards
+                    if (currentStatus == "Approved")
+                    {
+                        lblMessage.Text = "This task has already been approved.";
+                        lblMessage.CssClass = "feedback-msg error";
+                        return;
+                    }
+
+                    // Execute Updates inside a Transaction
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Approve Task
+                            using (SqlCommand taskCmd = new SqlCommand(updateTaskQuery, connection, transaction))
+                            {
+                                taskCmd.Parameters.AddWithValue("@TaskId", taskId);
+                                taskCmd.ExecuteNonQuery();
+                            }
+
+                            // Add XP to Student
+                            using (SqlCommand studentCmd = new SqlCommand(updateStudentXpQuery, connection, transaction))
+                            {
+                                studentCmd.Parameters.AddWithValue("@StudentId", studentId);
+                                studentCmd.Parameters.AddWithValue("@XpReward", xpReward);
+                                studentCmd.ExecuteNonQuery();
+                            }
+
+                            // Commit changes
+                            transaction.Commit();
+
+                            lblMessage.Text = $"Task approved successfully! {xpReward} XP awarded to student.";
+                            lblMessage.CssClass = "feedback-msg success";
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw; // Rethatch to trigger outer catch
+                        }
+                    }
                 }
-                lblMessage.Text = "Task approved successfully!";
-                lblMessage.CssClass = "feedback-msg success";
             }
             catch (Exception ex)
             {
