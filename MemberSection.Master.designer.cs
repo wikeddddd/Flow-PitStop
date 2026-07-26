@@ -51,6 +51,42 @@ namespace PitStop
         protected global::System.Web.UI.HtmlControls.HtmlAnchor dashboardLink;
 
         /// <summary>
+        /// phAdvisorNav control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phAdvisorNav;
+
+        /// <summary>
+        /// advisorNavHeader control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::PitStop.AdvisorNav advisorNavHeader;
+
+        /// <summary>
+        /// phStudentNav control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phStudentNav;
+
+        /// <summary>
+        /// phAdminNav control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phAdminNav;
+
+        /// <summary>
         /// lblUserInitials control.
         /// </summary>
         /// <remarks>
@@ -58,6 +94,15 @@ namespace PitStop
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUserInitials;
+
+        /// <summary>
+        /// btnLogout control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
         /// MemberMainContent control.

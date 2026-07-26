@@ -15,7 +15,7 @@
 
         <div class="sidebar-nav">
 
-            <asp:Panel ID="pnlNav" runat="server">
+            <asp:Panel ID="pnlNav" runat="server" Visible="false">
                 <asp:LinkButton ID="lnkPitWallTasks" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
                 <asp:LinkButton ID="lnkDashboard" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
                 <asp:LinkButton ID="lnkLeaderboard" runat="server" PostBackUrl="~/StudentLeaderboard.aspx">Leaderboard</asp:LinkButton>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="task-card">
                     <h3>Complete Duty Log</h3>
-                    <asp:GridView ID="gvTasks" runat="server" AutoGenerateColumns="False" DataKeyNames="StudentId">
+                    <asp:GridView ID="gvTasks" runat="server" AutoGenerateColumns="False" DataKeyNames="StudentId" CssClass="table-data">
                         <Columns>
                             <asp:BoundField DataField="title" HeaderText="title" SortExpression="title" />
                             <asp:BoundField DataField="description" HeaderText="description" SortExpression="description" />

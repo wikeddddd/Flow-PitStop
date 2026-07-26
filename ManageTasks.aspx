@@ -6,7 +6,7 @@
 </asp:Content>
 
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
-    <uc:AdvisorNav runat="server" ID="advisorNav" />
+    <uc:AdvisorNav runat="server" ID="advisorNav" Visible="false" />
     <div class="advisor-card">
         <asp:Label ID="lblMessage" runat="server" CssClass="feedback-msg"></asp:Label>
 

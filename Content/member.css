@@ -95,6 +95,49 @@ a {
     font-size: 13px;
     font-weight: 700;
 }
+.member-avatar-wrapper {
+    position: relative;
+}
+
+.member-avatar {
+    cursor: pointer;
+}
+
+.avatar-dropdown {
+    display: none;
+    position: absolute;
+    top: 44px;
+    right: 0;
+    background-color: var(--member-white);
+    border: 1px solid var(--member-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    min-width: 140px;
+    overflow: hidden;
+    z-index: 200;
+}
+
+    .avatar-dropdown.open {
+        display: block;
+    }
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--member-text-dark);
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+    .dropdown-item:hover {
+        background-color: var(--member-bg);
+        color: #e0524f;
+    }
 
 /* ===== Main Content Area ===== */
 .member-main {
@@ -389,3 +432,330 @@ a {
     border-radius: 6px;
     cursor: pointer;
 }
+
+/* ===== Advisor Dashboard Greeting ===== */
+.dashboard-header {
+    margin-bottom: 20px;
+}
+
+.user-profile-tag {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--member-text-dark);
+}
+
+    .user-profile-tag strong {
+        color: var(--member-blue);
+    }
+
+/* ===== Advisor Card (Team Overview, Recently Registered) ===== */
+.advisor-card {
+    background-color: var(--member-white);
+    border: 1px solid var(--member-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+
+    .advisor-card h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    .advisor-card p {
+        font-size: 14px;
+        color: var(--member-text-muted);
+    }
+
+    .advisor-card strong {
+        color: var(--member-text-dark);
+    }
+
+/* ===== GridView Table (Recently Registered Students) ===== */
+.table-data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+    .table-data th {
+        text-align: left;
+        padding: 10px 12px;
+        background-color: var(--member-bg);
+        color: var(--member-text-muted);
+        font-weight: 600;
+        border-bottom: 1px solid var(--member-border);
+    }
+
+    .table-data td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--member-border);
+        color: var(--member-text-dark);
+    }
+
+    .table-data tr:last-child td {
+        border-bottom: none;
+    }
+
+/* ===== Advisor Nav Tabs (Dashboard / Manage Tasks / etc.) ===== */
+.advisor-tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.tab-link {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: var(--member-white);
+    border: 1px solid var(--member-border);
+    color: var(--member-text-muted);
+    transition: all 0.2s ease;
+}
+
+    .tab-link:hover {
+        background-color: var(--member-blue);
+        color: #ffffff;
+        border-color: var(--member-blue);
+    }
+
+/* ===== Advisor Nav — Header Version ===== */
+.header-advisor-nav {
+    display: flex;
+    align-items: center;
+}
+
+    .header-advisor-nav .advisor-tabs {
+        display: flex;
+        gap: 24px;
+        margin: 0;
+    }
+
+    .header-advisor-nav .tab-link {
+        padding: 0;
+        background: none;
+        border: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--member-text-muted);
+    }
+
+        .header-advisor-nav .tab-link:hover {
+            background: none;
+            color: var(--member-blue);
+        }
+
+.header-role-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+    .header-role-nav a,
+    .header-role-nav .tab-link {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--member-text-muted);
+        padding: 0;
+        background: none;
+        border: none;
+    }
+
+        .header-role-nav a:hover,
+        .header-role-nav .tab-link:hover {
+            color: var(--member-blue);
+            background: none;
+        }
+/* ===== Plain Form Tables (Add New Task layout) ===== */
+.advisor-card table {
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+
+    .advisor-card table td {
+        padding: 8px 10px;
+        font-size: 14px;
+        vertical-align: top;
+    }
+
+.advisor-card input[type="text"],
+.advisor-card input[type="date"],
+.advisor-card textarea {
+    width: 100%;
+    min-width: 220px;
+    padding: 8px 10px;
+    border: 1px solid var(--member-border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+.advisor-card textarea {
+    resize: vertical;
+}
+
+/* ===== Buttons ===== */
+.btn-primary {
+    background-color: var(--member-blue);
+    color: #ffffff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+.feedback-msg {
+    display: block;
+    font-size: 13px;
+    color: var(--member-blue);
+    margin-bottom: 12px;
+}
+
+/* GridView Edit/Delete action links */
+.table-data a {
+    color: var(--member-blue);
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+/* ===== Profile Page ===== */
+.profile-card {
+    background-color: var(--member-white);
+    border: 1px solid var(--member-border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+    .profile-card h2 {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+.form-group {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+}
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--member-text-dark);
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group input[type="file"] {
+        padding: 9px 12px;
+        border: 1px solid var(--member-border);
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+.profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--member-border);
+    display: block;
+    margin-bottom: 16px;
+}
+
+.logo-img {
+    height: 22px;
+    width: auto;
+    display: block;
+}
+
+/* ===== Shared Dashboard Layout ===== */
+.content-workspace {
+    margin-top: 8px;
+}
+
+.section-headline {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.dashboard-card {
+    background-color: var(--member-white);
+    border: 1px solid var(--member-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+    .dashboard-card > * {
+        margin-right: 6px;
+    }
+
+/* ===== Task Cards (Pit Wall Tasks page) ===== */
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.task-card {
+    background-color: var(--member-white);
+    border: 1px solid var(--member-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+}
+
+    .task-card h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+.file-submission {
+    margin: 12px 0;
+}
+
+/* ===== GridView on Leaderboard pages (CssClass="grid-view") ===== */
+.grid-view {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+    .grid-view th {
+        text-align: left;
+        padding: 10px 12px;
+        background-color: var(--member-bg);
+        color: var(--member-text-muted);
+        font-weight: 600;
+        border-bottom: 1px solid var(--member-border);
+    }
+
+    .grid-view td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--member-border);
+    }
+
+    .grid-view tr:last-child td {
+        border-bottom: none;
+    }
+
+    .grid-view a {
+        color: var(--member-blue);
+        font-weight: 600;
+        margin-right: 8px;
+    }

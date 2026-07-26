@@ -13,14 +13,13 @@
     <form id="form1" runat="server">
        <header class="site-header">
     <div class="site-logo">
-        <span class="logo-icon">🏁</span> Pit<span class="logo-accent">Stop</span>
+        <img src="~/Images/flow.logo.svg" alt="PitStop" runat="server" class="logo-img" /> Pit<span class="logo-accent">Stop</span>
     </div>
     <nav class="site-nav">
         <ul class="nav-list">
             <li class="nav-item"><a href="~/Default.aspx" runat="server">About</a></li>
             <li class="nav-item"><a href="~/Default.aspx#features" runat="server">Features</a></li>
             <li class="nav-item"><a href="~/Default.aspx#how-it-works" runat="server">How It Works</a></li>
-            <li class="nav-item"><a href="~/Default.aspx#team" runat="server">Our Team</a></li>
         </ul>
     </nav>
     <div class="header-actions">
@@ -38,7 +37,8 @@
     <div class="footer-main">
         <div class="footer-brand">
             <div class="footer-logo">
-                <span class="logo-icon">🏁</span> Pit<span class="logo-accent">Stop</span>
+                <img src="~/Images/flow.logo.svg" alt="PitStop" runat="server" class="logo-img" /> Pit<span class="logo-accent">Stop</span>
+                
             </div>
             <p class="footer-desc">Gamified F1 learning platform for F1 in Schools teams. Built by APU students, for SMK Bandar Putra, Johor.</p>
         </div>

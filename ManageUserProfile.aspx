@@ -11,7 +11,7 @@
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
         <div class="profile-card">
             <h2>Manage Profile</h2>
-            <asp:Image ID="imgAvatar" runat="server" />
+            <asp:Image ID="imgAvatar" runat="server"  CssClass="profile-avatar"/>
             <asp:Panel ID="pnlNav" runat="server">
                 <asp:LinkButton ID="LinkButton1" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton2" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
