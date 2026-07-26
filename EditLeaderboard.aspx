@@ -10,7 +10,7 @@
 
 
     
-    <asp:Panel ID="pnlNav" runat="server">
+    <asp:Panel ID="pnlNav" runat="server" Visible="false">
         <nav class="sidebar-nav">
             <asp:LinkButton ID="lnkTasks" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
         </nav>

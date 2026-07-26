@@ -104,41 +104,6 @@
         </div>
     </section>
 
-    <!-- ===== TEAM SECTION ===== -->
-    <section class="team-section" id="team">
-        <span class="section-label center">THE CREW</span>
-        <h2 class="section-title center">MEET THE <span class="section-title-accent">DRIVERS.</span></h2>
-
-        <div class="team-grid">
-            <div class="team-card border-blue">
-                <div class="team-avatar">SN</div>
-                <h4 class="team-name">Sudhaarshan Nair</h4>
-                <p class="team-id">TP077292</p>
-                <span class="team-role">Team Lead &middot; Engineering</span>
-            </div>
-            <div class="team-card border-orange">
-                <div class="team-avatar avatar-orange">DA</div>
-                <h4 class="team-name">Danish Aiman</h4>
-                <p class="team-id">TP077272</p>
-                <span class="team-role accent">Design &middot; Aerodynamics</span>
-            </div>
-            <div class="team-card border-blue">
-                <div class="team-avatar">AA</div>
-                <h4 class="team-name">Ahmad Nur Azami</h4>
-                <p class="team-id">TP077269</p>
-                <span class="team-role">Manufacturing &middot; Strategy</span>
-            </div>
-            <div class="team-card border-white">
-                <div class="team-avatar">IM</div>
-                <h4 class="team-name">Iddin Irfan Mikhail</h4>
-                <p class="team-id">TP077270</p>
-                <span class="team-role">Marketing &middot; Research</span>
-            </div>
-        </div>
-
-        <p class="team-advisor">Advised by <strong>Mr. Jeffrey Jeselee Sijore</strong> &middot; Intake APU2F2511CS(CYB)</p>
-    </section>
-
     <!-- ===== CTA SECTION ===== -->
     <section class="cta-section">
         <span class="cta-badge">🏆 SEASON 2025 — NOW OPEN</span>

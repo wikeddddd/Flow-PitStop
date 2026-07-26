@@ -16,13 +16,6 @@
         </header>
         <div>
         </div>
-        <nav class="sidebar-navigation">
-            <asp:LinkButton ID="LinkButton1" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
-        
-            <asp:LinkButton ID="LinkButton2" runat="server" OnClick="LinkButton2_Click" PostBackUrl="~/StudentLeaderboard.aspx">Racer Leaderboard</asp:LinkButton>
-        
-            <asp:LinkButton ID="LinkButton3" runat="server" PostBackUrl="~/ManageUserProfile.aspx">User Profile</asp:LinkButton>
-        </nav>
         <main class="content-workspace">
             <h1 class="section-headline">Driver Performance</h1>
 

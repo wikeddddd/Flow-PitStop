@@ -11,8 +11,8 @@
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
         <div class="profile-card">
             <h2>Edit User</h2>
-            <asp:Image ID="imgAvatar" runat="server" />
-            <asp:LinkButton ID="lbDashboard" runat="server" PostBackUrl="~/AdminDashboard.aspx">Dashboard</asp:LinkButton>
+            <asp:Image ID="imgAvatar" runat="server" CssClass="profile-avatar" />
+            <asp:LinkButton ID="lbDashboard" runat="server" PostBackUrl="~/AdminDashboard.aspx" Visible="false">Dashboard</asp:LinkButton>
             <asp:ValidationSummary ID="vsProfile" runat="server" ValidationGroup="Profile" HeaderText="Please correct these errors" />
         </div>
         <div class="form-group">
@@ -87,6 +87,7 @@
 
             <asp:Button ID="btnDelete" runat="server" OnClick="btnDelete_Click" Text="Delete" />
         </div>
+
 
 
 </asp:Content>

@@ -33,6 +33,6 @@
             <EmptyDataTemplate>No students registered yet.</EmptyDataTemplate>
         </asp:GridView>
     </div>
-    <uc:AdvisorNav runat="server" />
+    <uc:AdvisorNav runat="server" Visible="false" />
 
     </asp:Content>

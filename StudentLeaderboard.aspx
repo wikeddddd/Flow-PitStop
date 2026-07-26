@@ -9,13 +9,7 @@
     <div class="dashboard-container">
 
 
-    
-        <nav class="sidebar-nav">
-            <asp:LinkButton ID="lnkTasks" runat="server" PostBackUrl="~/StudentDashboard.aspx">Dashboard</asp:LinkButton>
-            <asp:LinkButton ID="lnkLeaderboard" runat="server" PostBackUrl="~/PitWallTasks.aspx">Pit Wall Tasks</asp:LinkButton>
-            <asp:LinkButton ID="lnkProfile" runat="server" PostBackUrl="~/ManageUserProfile.aspx">User Profile</asp:LinkButton>
-        </nav>
-     </div>
+         </div>
         <main class="content-workspace">
             <h1 class="section-headline">Driver Standings</h1>
             <div class="dashboard-card">

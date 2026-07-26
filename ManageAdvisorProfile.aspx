@@ -1,6 +1,6 @@
 ﻿
 
-<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MemberSection.Master" CodeBehind="ManageAdvisorProfile.aspx.cs" Inherits="PitStop.ManageUserProfile" %>
+<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MemberSection.Master" CodeBehind="ManageAdvisorProfile.aspx.cs" Inherits="PitStop.ManageAdvisorProfile" %>
 
 
 
@@ -11,8 +11,8 @@
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MemberMainContent" runat="server">
         <div class="profile-card">
             <h2>Manage Profile</h2>
-            <asp:Image ID="imgAvatar" runat="server" />
-            <asp:Panel ID="pnlNav" runat="server">
+            <asp:Image ID="imgAvatar" runat="server" CssClass="profile-avatar" />
+            <asp:Panel ID="pnlNav" runat="server" Visible="false">
 
                 <a href="~/AdvisorDashboard.aspx" runat="server" id="lnkDashboard" class="tab-link">Dashboard</a>
                 <a href="~/ManageTasks.aspx" runat="server" id="lnkTasks" class="tab-link">Manage Tasks</a>
