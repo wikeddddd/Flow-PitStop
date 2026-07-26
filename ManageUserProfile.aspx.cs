@@ -17,6 +17,7 @@ namespace PitStop
         {
             if (Session["username"] == null)
             {
+                int userTableId = Convert.ToInt32(Session["UserLoginId"]);
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     string sqlQuery = "SELECT TOP 1 Id, username, role FROM UserPitStop ORDER BY Id ASC";
@@ -32,6 +33,7 @@ namespace PitStop
                                     Session["username"] = reader["username"].ToString();
                                     Session["role"] = reader["role"].ToString();
                                     Session["LoggedInUserId"] = Convert.ToInt32(reader["Id"]);
+                                    Session["UserTableId"] = userTableId;
                                 }
                             }
                             con.Close();
@@ -121,6 +123,7 @@ namespace PitStop
             string email = TBEmailAddress.Text.Trim();
             string phoneNum = TBPhoneNum.Text.Trim();
             string newAvatarPath = null;
+            int userTableId = Convert.ToInt32(Session["UserLoginId"]);
 
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phoneNum))
             {
@@ -191,29 +194,43 @@ namespace PitStop
                         break;
                 }
                 string sqlQuery;
+
+                string updateMainUserQuery = "UPDATE UserPitStop SET username = @Username, password = @Password WHERE Id = @UserTableId";
                 if (newAvatarPath != null)
-                    
+
                 {
                     sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum, avatarPath = @AvatarPath WHERE {ID} = @Id";
                 }
-                else { 
+                else {
                     sqlQuery = $"UPDATE {Tables} SET username = @Username, password = @Password, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @PhoneNum WHERE {ID} = @Id";
                 }
-                using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
+                try
                 {
-                    cmd.Parameters.AddWithValue("@Username", username);
-                    cmd.Parameters.AddWithValue("@Password", password); 
-                    cmd.Parameters.AddWithValue("@FirstName", firstName);
-                    cmd.Parameters.AddWithValue("@LastName", lastName);
-                    cmd.Parameters.AddWithValue("@Email", email);
-                    cmd.Parameters.AddWithValue("@PhoneNum", phoneNum);
-                    if (newAvatarPath != null) {
-                        cmd.Parameters.AddWithValue("@AvatarPath", newAvatarPath);
+                    using (SqlCommand cmdUpdateMainUser = new SqlCommand(updateMainUserQuery, con))
+                    {
+                        cmdUpdateMainUser.Parameters.AddWithValue("@Username", username);
+                        cmdUpdateMainUser.Parameters.AddWithValue("@Password", password);
+                        cmdUpdateMainUser.Parameters.AddWithValue("@UserTableId", userTableId);
+                        con.Open();
+                        cmdUpdateMainUser.ExecuteNonQuery();
+                        con.Close();
                     }
-                    cmd.Parameters.AddWithValue("@Id", Session["LoggedInUserId"]);
-                    try
+                    using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
                     {
                         con.Open();
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@Password", password);
+                        cmd.Parameters.AddWithValue("@FirstName", firstName);
+                        cmd.Parameters.AddWithValue("@LastName", lastName);
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@PhoneNum", phoneNum);
+                        if (newAvatarPath != null)
+                        {
+                            cmd.Parameters.AddWithValue("@AvatarPath", newAvatarPath);
+                        }
+                        cmd.Parameters.AddWithValue("@Id", Session["LoggedInUserId"]);
+
+                        
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
@@ -227,12 +244,12 @@ namespace PitStop
                         lblStatus.Text = "Profile updated successfully.";
                         LoadUserProfile();
                     }
-                    catch (Exception ex)
-                    {
-                        lblStatus.Text = "Error: " + ex.Message;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    lblStatus.Text = "Error: " + ex.Message;
+                }
+            }
                 }
             }
         }
-    }
-}

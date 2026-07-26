@@ -66,13 +66,14 @@ namespace PitStop
                     // Check Login
                     //---------------------------------------------------------
                     SqlCommand loginCmd = new SqlCommand(
-                        @"SELECT email, role
+                        @"SELECT Id, email, role
                   FROM UserPitStop
                   WHERE email=@Email AND password=@Password", con);
 
                     loginCmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
                     loginCmd.Parameters.AddWithValue("@Password", txtPassword.Text);
 
+                    int userLoginId = 0;
                     string email = "";
                     string type = "";
 
@@ -86,6 +87,7 @@ namespace PitStop
                             return;
                         }
 
+                        userLoginId = Convert.ToInt32(dr["Id"]);
                         email = dr["email"].ToString();
                         type = dr["role"].ToString().Trim().ToLower();
                     }
@@ -154,6 +156,7 @@ namespace PitStop
                     Session["role"] = type;
                     Session["username"] = username;
                     Session["LoggedInUserID"] = loginID;
+                    Session["UserLoginId"] = userLoginId;
 
                     //---------------------------------------------------------
                     // Redirect
