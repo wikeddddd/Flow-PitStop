@@ -65,8 +65,8 @@
             <asp:TextBox ID="TBPhoneNum" runat="server"></asp:TextBox>
             <asp:RequiredFieldValidator ID="validatePhoneNum" runat="server" ErrorMessage="Phone number is required" ControlToValidate="TBPhoneNum" ValidationGroup="Profile"></asp:RequiredFieldValidator>
         </div>
-        <asp:Label ID="lblStatus" runat="server" Text="Label"></asp:Label>
-        <asp:Button ID="btnSaveProfile" runat="server" OnClick="btnSaveProfile_Click" Text="Button" ValidationGroup="Profile" />
+        <asp:Label ID="lblStatus" runat="server"></asp:Label>
+        <asp:Button ID="btnSaveProfile" runat="server" OnClick="btnSaveProfile_Click" Text="Save" ValidationGroup="Profile" />
 
 
 </asp:Content>

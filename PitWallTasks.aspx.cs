@@ -118,9 +118,9 @@ namespace PitStop
             try
             {
                 int targetTaskId = Convert.ToInt32(ddlPendingTasks.SelectedValue);
-                string checkQuery = @"SELECT COUNT(*) 
-                          FROM Tasks
-                          WHERE StudentId = @StudentId AND TaskId = @TaskId";
+                string checkQuery = @"SELECT status 
+                              FROM Tasks 
+                              WHERE StudentId = @StudentId AND TaskId = @TaskId";
 
                 string uploadPath = Server.MapPath("~/Uploads/");
                 if (!Directory.Exists(uploadPath))
@@ -140,12 +140,12 @@ namespace PitStop
                         checkCmd.Parameters.AddWithValue("@StudentId", studentId);
                         checkCmd.Parameters.AddWithValue("@TaskId", targetTaskId);
                         con.Open();
-                        int existingCount = (int)checkCmd.ExecuteScalar();
                         
+                        object result = checkCmd.ExecuteScalar();
+                        string currentStatus = result != null ? result.ToString() : "";
 
-                        if (existingCount > 0)
+                        if (currentStatus == "Submitted" || currentStatus == "Approved")
                         {
-                            // Block duplicate submission
                             lblStatus.Text = "You have already submitted a document for this task!";
                             lblStatus.CssClass = "feedback-msg error";
                             return; // Stop execution
@@ -164,7 +164,7 @@ namespace PitStop
                             {
                                 cmd.Parameters.AddWithValue("@taskId", targetTaskId);
                                 cmd.Parameters.AddWithValue("@filePath", filePath);
-                                con.Open();
+                               
                                 cmd.ExecuteNonQuery();
                                 con.Close();
                             }

@@ -28,6 +28,15 @@ namespace PitStop
             if (Session["LoggedInUserId"] != null) 
             {
                 int activeStudentId = Convert.ToInt32(Session["LoggedInUserId"]);
+                if (Session["username"] != null && !string.IsNullOrEmpty(Session["username"].ToString()))
+                {
+                    lblUserProfile.Text = Session["username"].ToString();
+                }
+                else
+                {
+                    // Fallback to query student name/username from DB if session is empty
+                    LoadStudentName(activeStudentId);
+                }
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
                 {
                     string sqlQuery = "SELECT totalXp, currentLevel, dailyStreak FROM Gamification WHERE Id = @Id";
@@ -64,6 +73,34 @@ namespace PitStop
                     }
                 }
             
+            }
+        }   
+        private void LoadStudentName(int studentId)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
+            {
+                string sqlQuery = "SELECT username, firstName FROM Students WHERE StudentId = @StudentId";
+                using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@StudentId", studentId);
+                    try
+                    {
+                        con.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string username = reader["username"] != DBNull.Value ? reader["username"].ToString() : reader["firstName"].ToString();
+                                lblUserProfile.Text = username;
+                                Session["username"] = username; // Keep session synced
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        lblUserProfile.Text = "Student";
+                    }
+                }
             }
         }
 
