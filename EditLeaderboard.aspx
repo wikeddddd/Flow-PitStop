@@ -46,7 +46,7 @@
                             <ItemTemplate><asp:Label ID="lblDailyStreak" runat="server" Text='<%# Eval("DailyStreak") %>'></asp:Label></ItemTemplate>
                             <EditItemTemplate><asp:TextBox ID="txtDailyStreak" runat="server" Text='<%# Bind("DailyStreak") %>'></asp:TextBox></EditItemTemplate>
                         </asp:TemplateField>
-                        <asp:CommandField ShowEditButton="true" ShowDeleteButton="true" />
+                        <asp:CommandField ShowEditButton="true" ShowDeleteButton="false" />
                     </Columns>
                 </asp:GridView>
 

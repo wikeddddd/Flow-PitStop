@@ -235,7 +235,7 @@ namespace PitStop
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(
                         "UPDATE Students SET firstName=@FirstName, schoolName=@SchoolName WHERE StudentId=@Id; " +
-                        "UPDATE Gamification SET totalXp=@TotalXp, currentLevel=@CurrentLevel, dailyStreak=@DailyStreak WHERE StudentId=@Id", con))
+                        "UPDATE Gamification SET totalXp=@TotalXp, currentLevel=@CurrentLevel, dailyStreak=@DailyStreak WHERE Id=@Id", con))
                     {
                         cmd.Parameters.AddWithValue("@FirstName", firstName);
                         cmd.Parameters.AddWithValue("@SchoolName", schoolName);
@@ -270,7 +270,7 @@ namespace PitStop
                 {
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(
-                        "DELETE FROM Gamification WHERE StudentId=@Id; DELETE FROM Students WHERE StudentId=@Id", con))
+                        "DELETE FROM Gamification WHERE Id=@Id; DELETE FROM Students WHERE Id=@Id", con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
                         cmd.ExecuteNonQuery();
