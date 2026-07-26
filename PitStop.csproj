@@ -73,6 +73,7 @@
     <Content Include="Content\member.css" />
     <Content Include="Content\site.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Images\flow.logo.svg" />
     <Content Include="Login.aspx" />
     <Content Include="EditUser.aspx" />
     <Content Include="ManageStudents.aspx" />
@@ -89,7 +90,6 @@
     <Content Include="StudentDashboard.aspx" />
     <Content Include="EditLeaderboard.aspx" />
     <Content Include="StudentLeaderboard.aspx" />
-    <Content Include="Student\Dashboard.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -220,13 +220,6 @@
     <Compile Include="StudentLeaderboard.aspx.designer.cs">
       <DependentUpon>StudentLeaderboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\Dashboard.aspx.cs">
-      <DependentUpon>Dashboard.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Student\Dashboard.aspx.designer.cs">
-      <DependentUpon>Dashboard.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MemberSection.Master" />
@@ -239,7 +232,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Student\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

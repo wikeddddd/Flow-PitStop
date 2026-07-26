@@ -1,4 +1,5 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MemberSection.master.cs" Inherits="PitStop.MemberSection" %>
+﻿<%@ Register TagPrefix="uc" TagName="AdvisorNav" Src="~/AdvisorNav.ascx" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MemberSection.master.cs" Inherits="PitStop.MemberSection" %>
 
 <!DOCTYPE html>
 <html>
@@ -11,30 +12,71 @@
     <form id="form1" runat="server" enctype="multipart/form-data">
         <header class="member-header">
             <div class="member-logo">
-                <span class="logo-icon-sm">🏁</span> PitStop
-            </div>
+<img src="~/Images/flow.logo.svg" alt="PitStop" runat="server" class="logo-img" /> PitStop            </div>
 
-            <nav class="member-nav">
-                <ul class="member-nav-list">
-                    <li id="navDashboard" runat="server" class="member-nav-item active">
-                        <a id="dashboardLink" runat="server">Dashboard</a>
-                    </li>
-                </ul>
-            </nav>
+        <nav class="member-nav">
+            <ul class="member-nav-list">
+                <li id="navDashboard" runat="server" class="member-nav-item active">
+                    <a id="dashboardLink" runat="server">Dashboard</a>
+                </li>
+            </ul>
 
+            <asp:PlaceHolder ID="phAdvisorNav" runat="server" Visible="false">
+                <div class="header-role-nav">
+                    <uc:AdvisorNav runat="server" ID="advisorNavHeader" />
+                </div>
+            </asp:PlaceHolder>
+
+                <asp:PlaceHolder ID="phStudentNav" runat="server" Visible="false">
+                    <div class="header-role-nav">
+                        <a href="~/StudentDashboard.aspx" runat="server">Dashboard</a>
+                        <a href="~/PitWallTasks.aspx" runat="server">Tasks</a>
+                        <a href="~/StudentLeaderboard.aspx" runat="server">Leaderboard</a>
+                        <a href="~/ManageUserProfile.aspx" runat="server">User Profile</a>
+                    </div>
+                </asp:PlaceHolder>
+
+                <asp:PlaceHolder ID="phAdminNav" runat="server" Visible="false">
+                    <div class="header-role-nav">
+                        <a href="~/AdminDashboard.aspx" runat="server">Dashboard</a>
+                        <a href="~/ManageUserProfile.aspx" runat="server">User Profile</a>
+                        <a href="~/EditUser.aspx" runat="server">Manage User</a>
+                        <a href="~/ManageTasks.aspx" runat="server">Tasks</a>
+                        <a href="~/EditLeaderboard.aspx" runat="server">Leaderboard</a>
+                    </div>
+                </asp:PlaceHolder> 
+        </nav>  
             <div class="member-actions">
-                <span class="icon-btn">🔍</span>
-                <span class="icon-btn">🔔</span>
-                <div class="member-avatar">
-                    <asp:Label ID="lblUserInitials" runat="server" Text="U"></asp:Label>
+                <div class="member-avatar-wrapper">
+                    <div class="member-avatar" onclick="toggleAvatarMenu()">
+                        <asp:Label ID="lblUserInitials" runat="server" Text="U"></asp:Label>
+                    </div>
+                    <div class="avatar-dropdown" id="avatarDropdown">
+                        <asp:LinkButton ID="btnLogout" runat="server" CssClass="dropdown-item" OnClick="btnLogout_Click">Log out</asp:LinkButton>
+                    </div>
                 </div>
             </div>
+
         </header>
 
         <main class="member-main">
             <asp:ContentPlaceHolder ID="MemberMainContent" runat="server">
             </asp:ContentPlaceHolder>
         </main>
+        <script type="text/javascript">
+    function toggleAvatarMenu() {
+        var dropdown = document.getElementById('avatarDropdown');
+        dropdown.classList.toggle('open');
+    }
+
+    document.addEventListener('click', function (e) {
+        var wrapper = document.querySelector('.member-avatar-wrapper');
+        if (wrapper && !wrapper.contains(e.target)) {
+            var dropdown = document.getElementById('avatarDropdown');
+            if (dropdown) dropdown.classList.remove('open');
+        }
+    });
+        </script>
     </form>
 </body>
 </html>

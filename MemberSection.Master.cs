@@ -14,18 +14,22 @@ namespace PitStop
                 lblUserInitials.Text = GetInitials(userName);
             }
 
-            // Point Dashboard link to the correct role's dashboard
+            navDashboard.Visible = false;
+
             if (role == "admin")
             {
                 dashboardLink.Attributes["href"] = ResolveUrl("~/AdminDashboard.aspx");
+                phAdminNav.Visible = true;
             }
             else if (role == "advisor")
             {
                 dashboardLink.Attributes["href"] = ResolveUrl("~/AdvisorDashboard.aspx");
+                phAdvisorNav.Visible = true;
             }
             else
             {
                 dashboardLink.Attributes["href"] = ResolveUrl("~/StudentDashboard.aspx");
+                phStudentNav.Visible = true;
             }
         }
 
@@ -39,6 +43,12 @@ namespace PitStop
                 if (initials.Length >= 2) break;
             }
             return initials.ToUpper();
+        }
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("~/Login.aspx");
         }
     }
 }
