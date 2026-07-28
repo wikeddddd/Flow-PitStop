@@ -114,6 +114,26 @@ namespace PitStop
             }
         }
 
+        private bool CheckExistingEmailAndUsername(string originalUsername, string newUsername, string newEmail)
+        {
+            // Look up the UserPitStop.Id for the original username to exclude their own record
+            string query = @"SELECT COUNT(1) FROM UserPitStop 
+                             WHERE (LOWER(username) = LOWER(@NewUsername) OR LOWER(email) = LOWER(@NewEmail))
+                               AND Id != (SELECT TOP 1 Id FROM UserPitStop WHERE username = @OriginalUsername)";
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@NewUsername", newUsername.Trim());
+                    cmd.Parameters.AddWithValue("@NewEmail", newEmail.Trim());
+                    cmd.Parameters.AddWithValue("@OriginalUsername", originalUsername.Trim());
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
+
         protected void btnSaveProfile_Click(object sender, EventArgs e)
         {
             string username = TBUsername.Text.Trim();
@@ -128,6 +148,13 @@ namespace PitStop
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phoneNum))
             {
                 lblStatus.Text = "Please fill in all required fields.";
+                return;
+            }
+
+            string originalUsername = Session["username"].ToString();
+            if (CheckExistingEmailAndUsername(originalUsername, username, email))
+            {
+                lblStatus.Text = "Username or email already in use by another user.";
                 return;
             }
 
